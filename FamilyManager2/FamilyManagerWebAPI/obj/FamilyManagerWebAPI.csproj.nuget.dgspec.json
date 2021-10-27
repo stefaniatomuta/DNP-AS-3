@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\tomut\\Desktop\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\FamilyManagerWebAPI.csproj": {}
+    "C:\\Main\\School\\3rd Semester\\DNP\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\FamilyManagerWebAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\tomut\\Desktop\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\FamilyManagerWebAPI.csproj": {
+    "C:\\Main\\School\\3rd Semester\\DNP\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\FamilyManagerWebAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\tomut\\Desktop\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\FamilyManagerWebAPI.csproj",
+        "projectUniqueName": "C:\\Main\\School\\3rd Semester\\DNP\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\FamilyManagerWebAPI.csproj",
         "projectName": "FamilyManagerWebAPI",
-        "projectPath": "C:\\Users\\tomut\\Desktop\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\FamilyManagerWebAPI.csproj",
-        "packagesPath": "C:\\Users\\tomut\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\tomut\\Desktop\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\obj\\",
+        "projectPath": "C:\\Main\\School\\3rd Semester\\DNP\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\FamilyManagerWebAPI.csproj",
+        "packagesPath": "C:\\Users\\Vlad\\.nuget\\packages\\",
+        "outputPath": "C:\\Main\\School\\3rd Semester\\DNP\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\tomut\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Vlad\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
