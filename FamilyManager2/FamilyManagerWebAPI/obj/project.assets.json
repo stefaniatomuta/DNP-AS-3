@@ -193,19 +193,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\adria\\.nuget\\packages\\": {}
+    "C:\\Users\\tomut\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\adria\\DNP\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\FamilyManagerWebAPI.csproj",
+      "projectUniqueName": "C:\\Users\\tomut\\Desktop\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\FamilyManagerWebAPI.csproj",
       "projectName": "FamilyManagerWebAPI",
-      "projectPath": "C:\\Users\\adria\\DNP\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\FamilyManagerWebAPI.csproj",
-      "packagesPath": "C:\\Users\\adria\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\adria\\DNP\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\obj\\",
+      "projectPath": "C:\\Users\\tomut\\Desktop\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\FamilyManagerWebAPI.csproj",
+      "packagesPath": "C:\\Users\\tomut\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\tomut\\Desktop\\DNP-AS-2\\FamilyManager2\\FamilyManagerWebAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\adria\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\tomut\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
@@ -252,7 +252,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }
