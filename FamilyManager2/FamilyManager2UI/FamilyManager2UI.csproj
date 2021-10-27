@@ -6,6 +6,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\FamilyManagerClassLibrary\FamilyManagerClassLibrary.csproj" />
+      <ProjectReference Include="..\FamilyManagerWebAPI\FamilyManagerWebAPI.csproj" />
     </ItemGroup>
 
 </Project>

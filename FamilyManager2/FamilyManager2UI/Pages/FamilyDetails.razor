@@ -3,8 +3,9 @@
 @using FamilyManager2UI.Data
 @using Models;
 @using System.Threading
+@using FamilyManagerWebAPI.Controllers
 @inject NavigationManager navigationManager;
-@inject IFamilyData familyData;
+@inject FamiliesController familyController;
 @inherits MainLayout ;
 <!-- role, name, age, pets if any, id, age, sex -->
 
@@ -170,7 +171,7 @@
     int currentSlide = 0;
 
     protected override async Task OnInitializedAsync() {
-        family = familyData.GetFamily(Address, Number);
+        family = await familyController.GetFamilyAsync(Address, Number).Result;
         familyMembers = family.GetAllMembers();
         filteredFamilyMembers = familyMembers;
 
@@ -298,7 +299,7 @@
     }
     
     private void RemoveFamily() {
-        familyData.RemoveFamily(Address,Number);
+        familyController.RemoveFamilyAsync(Address,Number);
         navigationManager.NavigateTo("/FamilyList");
     }
 
