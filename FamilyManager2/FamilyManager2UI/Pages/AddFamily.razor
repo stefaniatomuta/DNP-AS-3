@@ -1,0 +1,52 @@
+﻿@page "/AddFamily"
+@using Data;
+@using Models
+@inject NavigationManager NavMng;
+@inject IFamilyData FamilyData;
+<div class="container mt-6 mb-6 p-6 my-auto h-100 w-50">
+    <div class="card p-4">
+        <div class="d-flex flex-column justify-content-center align-items-center col-sm">
+            <h3>Add a New Family</h3>
+            <EditForm Model="@family" OnSubmit="@CreateNewFamily">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+                <p>Street Name:</p>
+                <div class="form-group"> 
+                    <InputText @bind-Value="family.StreetName"/>
+                </div>
+                <p>House Number:</p>
+                <div class="form-group">
+                    <InputNumber @bind-Value="family.HouseNumber"/>
+                </div>
+                <p class="actions">
+                    <button class="btn btn-outline-dark" type="submit">Add Family</button>
+                </p>
+                <label style="color: red">@error</label>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Family family = new Family();
+    private string error = "";
+
+    protected override async Task OnInitializedAsync() {
+    }
+    
+    private void CreateNewFamily() {
+        try {
+            FamilyData.AddFamily(new Family() {
+                Adults = new List<Adult>(),
+                Children = new List<Child>(),
+                HouseNumber = family.HouseNumber,
+                StreetName = family.StreetName,
+                Pets = new List<Pet>()
+            });
+            NavMng.NavigateTo("/AddFamilyMember");
+        }
+        catch (Exception e) {
+            error = e.Message;
+        }
+    }
+}
