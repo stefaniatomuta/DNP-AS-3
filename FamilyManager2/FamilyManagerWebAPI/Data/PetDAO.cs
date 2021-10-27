@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Models;
 
 namespace FamilyManagerWebAPI.Data {
-    public class PetData : IPetData {
+    public class PetDAO : IPetDAO {
         public async Task<Pet> GetPetAsync(int petId) {
             throw new System.NotImplementedException();
         }
