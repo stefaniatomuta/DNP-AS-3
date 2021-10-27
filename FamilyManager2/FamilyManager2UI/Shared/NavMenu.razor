@@ -1,27 +1,44 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">FamilyManager2UI</a>
+﻿@using FamilyManagerApp.Data
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Family Manager</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
 </div>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
+<div class="@NavMenuCssClass  justify-content-between" @onclick="ToggleNavMenu">
+    <ul class="navbar nav-justified-center">
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+            <NavLink class="nav-link" href="FamilyList">
+                <span class="oi oi-list" aria-hidden="true"/> Family List
             </NavLink>
         </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
+        <AuthorizeView Policy="@Policies.IsAdmin">
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/AddFamilyMember">
+                    <span class="oi oi-plus"></span> Add a New Member
+                </NavLink>
+            </li>
+        </AuthorizeView>
+        <AuthorizeView>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/Stats">
+                    <span class="oi oi-bar-chart"></span> Statistics
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" @onclick="PerformLogout">
+                    <span class="oi oi-account-logout"></span> Logout
+                </NavLink>
+            </li>
+        </AuthorizeView>
     </ul>
 </div>
 
@@ -30,8 +47,13 @@
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    private void ToggleNavMenu()
-    {
+    private void ToggleNavMenu() {
         collapseNavMenu = !collapseNavMenu;
     }
+
+    public async Task PerformLogout() {
+        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).Logout();
+        NavigationManager.NavigateTo("/Login");
+    }
+
 }
