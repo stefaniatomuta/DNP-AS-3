@@ -1,10 +1,7 @@
 ﻿@page "/AddFamilyMember"
-@using FamilyManagerApp.Data
-@attribute [Authorize(Policy = Policies.IsAdmin)]
-
-@using Data
+@using FamilyManager2UI.Data
 @using Models
-@using System.Collections
+@attribute [Authorize(Policy = Policies.IsAdmin)]
 @inject NavigationManager NavMng;
 @inject IFamilyData FamilyData;
 
