@@ -13,71 +13,78 @@ namespace FamilyManager2UI.Shared
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Components;
 #nullable restore
-#line 1 "C:\Users\tomut\Desktop\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
+#line 1 "C:\Users\adria\DNP\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
 using System.Net.Http;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 2 "C:\Users\tomut\Desktop\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
+#line 2 "C:\Users\adria\DNP\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
 using Microsoft.AspNetCore.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 3 "C:\Users\tomut\Desktop\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
+#line 3 "C:\Users\adria\DNP\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
 using Microsoft.AspNetCore.Components.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 4 "C:\Users\tomut\Desktop\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
+#line 4 "C:\Users\adria\DNP\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
 using Microsoft.AspNetCore.Components.Forms;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 5 "C:\Users\tomut\Desktop\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
+#line 5 "C:\Users\adria\DNP\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
 using Microsoft.AspNetCore.Components.Routing;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 6 "C:\Users\tomut\Desktop\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
+#line 6 "C:\Users\adria\DNP\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
 using Microsoft.AspNetCore.Components.Web;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 7 "C:\Users\tomut\Desktop\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
+#line 7 "C:\Users\adria\DNP\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 8 "C:\Users\tomut\Desktop\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
+#line 8 "C:\Users\adria\DNP\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
 using Microsoft.JSInterop;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 9 "C:\Users\tomut\Desktop\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
+#line 9 "C:\Users\adria\DNP\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
 using FamilyManager2UI;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 10 "C:\Users\tomut\Desktop\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
+#line 10 "C:\Users\adria\DNP\DNP-AS-2\FamilyManager2\FamilyManager2UI\_Imports.razor"
 using FamilyManager2UI.Shared;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 1 "C:\Users\adria\DNP\DNP-AS-2\FamilyManager2\FamilyManager2UI\Shared\NavMenu.razor"
+using FamilyManagerApp2UI.Data;
 
 #line default
 #line hidden
@@ -90,20 +97,27 @@ using FamilyManager2UI.Shared;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 28 "C:\Users\tomut\Desktop\DNP-AS-2\FamilyManager2\FamilyManager2UI\Shared\NavMenu.razor"
+#line 45 "C:\Users\adria\DNP\DNP-AS-2\FamilyManager2\FamilyManager2UI\Shared\NavMenu.razor"
        
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    private void ToggleNavMenu()
-    {
+    private void ToggleNavMenu() {
         collapseNavMenu = !collapseNavMenu;
     }
+
+    public async Task PerformLogout() {
+        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).Logout();
+        NavigationManager.NavigateTo("/Login");
+    }
+
 
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavigationManager { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
     }
 }
 #pragma warning restore 1591

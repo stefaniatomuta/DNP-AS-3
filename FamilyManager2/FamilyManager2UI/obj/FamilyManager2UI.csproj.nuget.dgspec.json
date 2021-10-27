@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\tomut\\Desktop\\DNP-AS-2\\FamilyManager2\\FamilyManager2UI\\FamilyManager2UI.csproj": {}
+    "C:\\Users\\adria\\DNP\\DNP-AS-2\\FamilyManager2\\FamilyManager2UI\\FamilyManager2UI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\tomut\\Desktop\\DNP-AS-2\\FamilyManager2\\FamilyManager2UI\\FamilyManager2UI.csproj": {
+    "C:\\Users\\adria\\DNP\\DNP-AS-2\\FamilyManager2\\FamilyManager2UI\\FamilyManager2UI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\tomut\\Desktop\\DNP-AS-2\\FamilyManager2\\FamilyManager2UI\\FamilyManager2UI.csproj",
+        "projectUniqueName": "C:\\Users\\adria\\DNP\\DNP-AS-2\\FamilyManager2\\FamilyManager2UI\\FamilyManager2UI.csproj",
         "projectName": "FamilyManager2UI",
-        "projectPath": "C:\\Users\\tomut\\Desktop\\DNP-AS-2\\FamilyManager2\\FamilyManager2UI\\FamilyManager2UI.csproj",
-        "packagesPath": "C:\\Users\\tomut\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\tomut\\Desktop\\DNP-AS-2\\FamilyManager2\\FamilyManager2UI\\obj\\",
+        "projectPath": "C:\\Users\\adria\\DNP\\DNP-AS-2\\FamilyManager2\\FamilyManager2UI\\FamilyManager2UI.csproj",
+        "packagesPath": "C:\\Users\\adria\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\adria\\DNP\\DNP-AS-2\\FamilyManager2\\FamilyManager2UI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\tomut\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\adria\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
@@ -55,7 +55,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
         }
       }
     }

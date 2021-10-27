@@ -5,7 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="obj\Debug\net5.0\FamilyManagerWebAPI.csprojAssemblyReference.cache" />
     </ItemGroup>
 
 </Project>
