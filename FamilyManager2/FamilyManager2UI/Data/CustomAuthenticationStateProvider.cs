@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using Models;
 
+
 namespace FamilyManager2UI.Data {
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider {
         private readonly IJSRuntime jsRuntime;
