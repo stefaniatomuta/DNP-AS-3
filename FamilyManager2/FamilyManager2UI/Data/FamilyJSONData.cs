@@ -48,27 +48,6 @@ namespace FamilyManager2UI.Data
             return people;
         }
 
-        public IList<Adult> GetAdults() {
-            List<Adult> Adults = new List<Adult>();
-            foreach (var fam in Families) {
-                Adults.AddRange(fam.Adults);
-            }
-            return Adults;
-        }
-
-        public IList<Child> GetChildren() {
-            List<Child> Children = new List<Child>();
-            foreach (var fam in Families) {
-                Children.AddRange(fam.Children);
-            }
-            return Children;
-        }
-
-        public IList<Pet> GetPets() {
-            List<Pet> pets = new List<Pet>(Pets);
-            return pets;
-        }
-
         public void AddFamily(Family family) {
             Family fam = Families.FirstOrDefault(f => f.HouseNumber == family.HouseNumber
                                                       && f.StreetName.Equals(family.StreetName));
@@ -120,26 +99,9 @@ namespace FamilyManager2UI.Data
             WriteFamiliesToFile();
         }
 
-        public void RemovePerson(int personId) {
-            Person person = People.First(p => p.Id == personId);
-            People.Remove(person);
-            WriteFamiliesToFile();
-        }
-
-        public void RemovePet(int petId) {
-            Pet pet = Pets.First(p => p.Id == petId);
-            Pets.Remove(pet);
-            WriteFamiliesToFile();
-        }
-
         public Family GetFamily(string streetName, int houseNumber) {
             return Families.FirstOrDefault(f => f.StreetName.Equals(streetName)
                                                 && f.HouseNumber == houseNumber);
-        }
-        
-
-        public Person GetPerson(int id) {
-            return People.FirstOrDefault(p => p.Id == id);
         }
 
         public Person GetPersonByIdFirstLastName(int id, string firstname, string lastname) {
@@ -150,15 +112,7 @@ namespace FamilyManager2UI.Data
         public Pet GetPet(int petId) {
             return Pets.FirstOrDefault(p => p.Id == petId);
         }
-
-        public void UpdateFamily(Family family) {
-            Family fam = Families.First(f => f.HouseNumber == family.HouseNumber
-                                             && f.StreetName.Equals(family.StreetName));
-            fam.HouseNumber = family.HouseNumber;
-            fam.StreetName = family.StreetName;
-            WriteFamiliesToFile();
-        }
-
+        
         public void UpdatePerson(Person person) {
             Person per = People.First(p => p.Id == person.Id);
             per.LastName = person.LastName;
@@ -168,13 +122,7 @@ namespace FamilyManager2UI.Data
             per.Weight = person.Weight;
             WriteFamiliesToFile();
         }
-
-        public void UpdatePet(Pet pet) {
-            Pet p = Pets.First(p => p.Id == pet.Id);
-            p.Age = pet.Age;
-            WriteFamiliesToFile();
-        }
-
+        
         public IList<string> GetEyeColors() {
             return People.Select(p => p.EyeColor).Distinct().ToList();
         }
