@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Models;
 
-namespace FamilyManagerApp.Data
+namespace FamilyManager2UI.Data
 {
     public interface IFamilyData
     {

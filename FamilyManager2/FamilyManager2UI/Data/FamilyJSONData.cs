@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text.Json;
 using Models;
 
-namespace FamilyManagerApp.Data
+namespace FamilyManager2UI.Data
 {
     public class FamilyJSONData : IFamilyData {
         private string FamilyFile = "Data/families.json";

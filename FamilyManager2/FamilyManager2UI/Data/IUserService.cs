@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Models;
 
-namespace FamilyManagerApp.Data {
+namespace FamilyManager2UI.Data {
     public interface IUserService {
         List<User> GetUserList();
         User ValidateUser(string username, string password);

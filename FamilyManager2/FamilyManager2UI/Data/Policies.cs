@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace FamilyManagerApp.Data {
+namespace FamilyManager2UI.Data {
     public static class Policies {
         public const string IsAdmin = "IsAdmin";
 

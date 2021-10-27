@@ -4,9 +4,8 @@ using System.IO;
 using Models;
 using System.Linq;
 using System.Text.Json;
-using FileData;
 
-namespace FamilyManagerApp.Data {
+namespace FamilyManager2UI.Data {
     public class UserListService : IUserService {
         private string UsersFile = "Data/users.json";
         public List<User> users { get; set; }

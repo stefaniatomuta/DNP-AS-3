@@ -4,7 +4,7 @@ using System.IO;
 using System.Text.Json;
 using Models;
 
-namespace FileData
+namespace FamilyManager2UI.Data
 {
     public class FileContext
     {

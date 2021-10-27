@@ -4,12 +4,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
-using FileData;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using Models;
 
-namespace FamilyManagerApp.Data {
+namespace FamilyManager2UI.Data {
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider {
         private readonly IJSRuntime jsRuntime;
         private readonly IUserService userService;
