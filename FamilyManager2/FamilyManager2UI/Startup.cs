@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FamilyManager2UI.Data;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace FamilyManager2UI
 {
@@ -28,7 +29,13 @@ namespace FamilyManager2UI
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
+            
+            services.AddSingleton<IFamilyData, FamilyJSONData>();
+            services.AddSingleton<IUserService, UserListService>();
+            services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+            services.AddAuthorization(options => {
+                options.AddPolicy(Policies.IsAdmin, Policies.FollowsAdminPolicy());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

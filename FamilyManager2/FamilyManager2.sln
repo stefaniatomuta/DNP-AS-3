@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyManager2UI", "FamilyM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyManagerWebAPI", "FamilyManagerWebAPI\FamilyManagerWebAPI.csproj", "{3B59550B-D41C-443E-B826-697448D77C6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyManager2Library", "FamilyManager2Library\FamilyManager2Library.csproj", "{C4FED52A-E40C-4BBA-AA9B-FB5231B3EAFB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,9 +18,5 @@ Global
 		{3B59550B-D41C-443E-B826-697448D77C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B59550B-D41C-443E-B826-697448D77C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B59550B-D41C-443E-B826-697448D77C6E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C4FED52A-E40C-4BBA-AA9B-FB5231B3EAFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C4FED52A-E40C-4BBA-AA9B-FB5231B3EAFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C4FED52A-E40C-4BBA-AA9B-FB5231B3EAFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C4FED52A-E40C-4BBA-AA9B-FB5231B3EAFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
