@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,8 +42,14 @@ namespace FamilyManagerWebAPI.Data {
             throw new System.NotImplementedException();
         }
 
-        public Task<Adult> AddAdultAsync(string streetName, int houseNumber, Adult adult) {
-            throw new System.NotImplementedException();
+        public async Task<Adult> AddAdultAsync(string streetName, int houseNumber, Adult adult) {
+            foreach (Family fam in file.Families) {
+                if (fam.StreetName.Equals(streetName) && fam.HouseNumber == houseNumber) {
+                    fam.Adults.Add(adult);
+                }
+            }
+            file.SaveDataToFile();
+            return adult;
         }
         public async Task<IList<Adult>> GetAdultsByFamilyAsync(string streetName, int houseNumber) {
             return file.Families.First(f => f.StreetName.Equals(streetName) && f.HouseNumber == houseNumber).Adults;
@@ -50,7 +57,11 @@ namespace FamilyManagerWebAPI.Data {
         
         public async Task<Adult> GetAdultAsync(int id) {
             IList<Adult> adults = await GetAdultsAsync();
-            return adults.FirstOrDefault(adult => adult.Id == id);
+            Adult adult = adults.FirstOrDefault(adult => adult.Id == id);
+            if (adult == null) {
+                throw new NullReferenceException("There is no adult with such id");
+            }
+            return adult;
         }
 
         public async Task DeleteAdultAsync(int id) {
@@ -58,6 +69,9 @@ namespace FamilyManagerWebAPI.Data {
                 foreach (var adult in family.Adults) {
                     if (adult.Id == id) 
                         family.Adults.Remove(adult);
+                    else {
+                        throw new NullReferenceException("Cannot delete an adult that does not exist with that id");
+                    }
                 }
             }
         }
