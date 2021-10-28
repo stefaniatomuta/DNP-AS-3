@@ -9,9 +9,9 @@ namespace FamilyManagerWebAPI.Controllers {
     [ApiController]
     [Route("[controller]")]
     public class PetsController : ControllerBase {
-        private IPetDAO service;
+        private IDAO service;
 
-        public PetsController(IPetDAO service) {
+        public PetsController(IDAO service) {
             this.service = service;
         }
 
