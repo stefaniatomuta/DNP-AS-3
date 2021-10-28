@@ -54,9 +54,12 @@ namespace FamilyManagerWebAPI.Data {
         }
 
         public async Task DeleteAdultAsync(int id) {
-            IList<Adult> adults = await GetAdultsAsync();
-            Adult adult = adults.FirstOrDefault(adult => adult.Id == id);
-            adults.Remove(adult);
+            foreach (var family in file.Families) {
+                foreach (var adult in family.Adults) {
+                    if (adult.Id == id) 
+                        family.Adults.Remove(adult);
+                }
+            }
         }
 
         public async Task<Adult> UpdateAdultAsync(int id, Adult a) {
