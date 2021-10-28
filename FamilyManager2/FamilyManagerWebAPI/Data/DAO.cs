@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using Models;
 
@@ -43,25 +45,43 @@ namespace FamilyManagerWebAPI.Data {
         public Task<Adult> AddAdultAsync(string streetName, int houseNumber, Adult adult) {
             throw new System.NotImplementedException();
         }
-
-        public Task<Adult> GetAdultByFamilyAsync(string streetName, int houseNumber, int id) {
-            throw new System.NotImplementedException();
+        public async Task<IList<Adult>> GetAdultsByFamilyAsync(string streetName, int houseNumber) {
+            return file.Families.First(f => f.StreetName.Equals(streetName) && f.HouseNumber == houseNumber).Adults;
+        }
+        
+        public async Task<Adult> GetAdultAsync(int id) {
+            IList<Adult> adults = await GetAdultsAsync();
+            return adults.FirstOrDefault(adult => adult.Id == id);
         }
 
-        public Task<Adult> GetAdultAsync(int id) {
-            throw new System.NotImplementedException();
+        public async Task DeleteAdultAsync(int id) {
+            IList<Adult> adults = await GetAdultsAsync();
+            Adult adult = adults.FirstOrDefault(adult => adult.Id == id);
+            adults.Remove(adult);
         }
 
-        public Task DeleteAdultAsync(int id) {
-            throw new System.NotImplementedException();
+        public async Task<Adult> UpdateAdultAsync(int id, Adult a) {
+            IList<Adult> adults = await GetAdultsAsync();
+            Adult adult = adults.FirstOrDefault(adult => adult.Id == id);
+            adult.FirstName = a.FirstName;
+            adult.LastName = a.LastName;
+            adult.HairColor = a.HairColor;
+            adult.JobTitle = a.JobTitle;
+            adult.Age = a.Age;
+            adult.Height = a.Height;
+            adult.Weight = a.Weight;
+            adult.EyeColor = a.EyeColor;
+            return adult;
         }
 
-        public Task<Adult> UpdateAdultAsync(int id) {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<IList<Adult>> GetAdultsAsync() {
-            throw new System.NotImplementedException();
+        public async Task<IList<Adult>> GetAdultsAsync() {
+            IList<Adult> adults = new List<Adult>();
+            foreach (var family in file.Families) {
+                foreach (Adult adult in family.Adults) {
+                    adults.Add(adult);
+                }
+            }
+            return adults;
         }
 
         public Task<IList<Child>> GetChildrenAsync() {
