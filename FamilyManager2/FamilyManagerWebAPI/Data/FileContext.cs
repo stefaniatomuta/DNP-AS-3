@@ -6,6 +6,9 @@ using Models;
 namespace FamilyManagerWebAPI.Data {
     public class FileContext {
         private const string filePath = "Data/families.json";
+        public IList<Family> Families { get; }
+        public IList<Person> People { get; }
+        public IList<Pet> Pets { get; }
 
         public FileContext() {
             if (!File.Exists(filePath)) {
