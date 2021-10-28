@@ -45,25 +45,43 @@ namespace FamilyManagerWebAPI.Data {
         public Task<Adult> AddAdultAsync(string streetName, int houseNumber, Adult adult) {
             throw new System.NotImplementedException();
         }
-
-        public Task<Adult> GetAdultByFamilyAsync(string streetName, int houseNumber, int id) {
-            throw new System.NotImplementedException();
+        public async Task<IList<Adult>> GetAdultsByFamilyAsync(string streetName, int houseNumber) {
+            return file.Families.First(f => f.StreetName.Equals(streetName) && f.HouseNumber == houseNumber).Adults;
+        }
+        
+        public async Task<Adult> GetAdultAsync(int id) {
+            IList<Adult> adults = await GetAdultsAsync();
+            return adults.FirstOrDefault(adult => adult.Id == id);
         }
 
-        public Task<Adult> GetAdultAsync(int id) {
-            throw new System.NotImplementedException();
+        public async Task DeleteAdultAsync(int id) {
+            IList<Adult> adults = await GetAdultsAsync();
+            Adult adult = adults.FirstOrDefault(adult => adult.Id == id);
+            adults.Remove(adult);
         }
 
-        public Task DeleteAdultAsync(int id) {
-            throw new System.NotImplementedException();
+        public async Task<Adult> UpdateAdultAsync(int id, Adult a) {
+            IList<Adult> adults = await GetAdultsAsync();
+            Adult adult = adults.FirstOrDefault(adult => adult.Id == id);
+            adult.FirstName = a.FirstName;
+            adult.LastName = a.LastName;
+            adult.HairColor = a.HairColor;
+            adult.JobTitle = a.JobTitle;
+            adult.Age = a.Age;
+            adult.Height = a.Height;
+            adult.Weight = a.Weight;
+            adult.EyeColor = a.EyeColor;
+            return adult;
         }
 
-        public Task<Adult> UpdateAdultAsync(int id) {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<IList<Adult>> GetAdultsAsync() {
-            throw new System.NotImplementedException();
+        public async Task<IList<Adult>> GetAdultsAsync() {
+            IList<Adult> adults = new List<Adult>();
+            foreach (var family in file.Families) {
+                foreach (Adult adult in family.Adults) {
+                    adults.Add(adult);
+                }
+            }
+            return adults;
         }
 
         public async Task<IList<Child>> GetChildrenAsync() {
@@ -120,28 +138,37 @@ namespace FamilyManagerWebAPI.Data {
             file.SaveData();
         }
 
-        public Task<Pet> GetPetAsync(int petId) {
-            throw new System.NotImplementedException();
+        public async Task<Pet> GetPetAsync(int petId) {
+            return file.Pets.First(p => petId == p.Id);
         }
 
-        public Task<IList<Pet>> GetPetsAsync(string street, int number) {
-            throw new System.NotImplementedException();
+        public async Task<IList<Pet>> GetPetsAsync(string street, int number) {
+            return file.Families.First(f => f.StreetName.Equals(street) && f.HouseNumber == number).Pets;
         }
 
-        public Task<Pet> AddPetAsync(Pet pet, string street, int number) {
-            throw new System.NotImplementedException();
+        public async Task<Pet> AddPetAsync(Pet pet, string street, int number) {
+            file.Families.First(f => f.StreetName.Equals(street) && f.HouseNumber == number).Pets.Add(pet);
+            return pet;
         }
 
-        public Task<Pet> AddPetAsync(Pet pet, string street, int number, int childId) {
-            throw new System.NotImplementedException();
+        public async Task<Pet> AddPetAsync(Pet pet, string street, int number, int childId) {
+            file.Families.First(f => f.StreetName.Equals(street) && f.HouseNumber == number).Children.First(c => c.Id == childId).Pets.Add(pet);
+            return pet;
         }
 
-        public Task<Pet> RemovePetAsync(int petId) {
-            throw new System.NotImplementedException();
+        public async Task<Pet> UpdatePetAsync(int id, Pet pet) {
+            Pet p = file.Pets.First(p => p.Id == id);
+            p.Age = pet.Age;
+            p.Name = pet.Name;
+            p.Species = pet.Species;
+            return p;
         }
 
-        public Task<Pet> UpdatePetAsync(int id, Pet pet) {
-            throw new System.NotImplementedException();
+        public async Task RemovePetAsync(int petId) {
+            foreach (var pet in file.Pets) {
+                if (pet.Id == petId)
+                    file.Pets.Remove(pet);
+            }
         }
     }
 }

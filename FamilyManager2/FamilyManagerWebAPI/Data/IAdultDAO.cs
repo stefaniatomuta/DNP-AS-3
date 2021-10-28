@@ -4,13 +4,12 @@ using Models;
 
 namespace FamilyManagerWebAPI.Data {
     public interface IAdultDAO {
-        Task<Adult> AddAdultAsync(string streetName, int houseNumber, Adult adult);
-        Task<Adult> GetAdultByFamilyAsync(string streetName, int houseNumber, int id);
-        Task<Adult> GetAdultAsync(int id);
-        Task DeleteAdultAsync(int id);
-        
-        Task<Adult> UpdateAdultAsync(int id);
         Task<IList<Adult>> GetAdultsAsync();
+        Task<Adult> GetAdultAsync(int id);
+        Task<IList<Adult>> GetAdultsByFamilyAsync(string streetName, int houseNumber);
+        Task<Adult> AddAdultAsync(string streetName, int houseNumber, Adult adult);
+        Task<Adult> UpdateAdultAsync(int id, Adult adult);
+        Task DeleteAdultAsync(int id);
 
     }
 }
