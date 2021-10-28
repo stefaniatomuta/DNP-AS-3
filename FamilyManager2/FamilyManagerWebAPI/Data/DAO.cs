@@ -14,13 +14,12 @@ namespace FamilyManagerWebAPI.Data {
         }
 
         public async Task<IList<string>> GetEyeColorsAsync() {
-            throw new System.NotImplementedException();
+            return file.People.Select(p => p.EyeColor).Distinct().ToList();
         }
 
         public async Task<IList<string>> GetHairColorsAsync() {
-            throw new System.NotImplementedException();
+            return file.People.Select(p => p.HairColor).Distinct().ToList();        
         }
-
 
         public async Task<IList<Family>> GetFamiliesAsync() {
             List<Family> families = new List<Family>(file.Families);
