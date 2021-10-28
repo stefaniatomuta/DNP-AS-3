@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Models;
@@ -26,20 +27,41 @@ namespace FamilyManagerWebAPI.Data {
             return families;
         }
 
-        public Task<Family> GetFamilyAsync(string streetName, int houseNumber) {
-            throw new System.NotImplementedException();
+        public async Task<Family> GetFamilyAsync(string streetName, int houseNumber) {
+            Family fam = file.Families.FirstOrDefault(f => f.StreetName.Equals(streetName) && f.HouseNumber == houseNumber);
+            if (fam == null) {
+                throw new NullReferenceException("No family was found with these street name and house number");
+            }
+            return fam;
         }
 
-        public Task<Family> AddFamilyAsync(Family family) {
-            throw new System.NotImplementedException();
+        public async Task<Family> AddFamilyAsync(Family family) {
+            Family fam = file.Families.FirstOrDefault(f =>
+                f.StreetName.Equals(family.StreetName) && f.HouseNumber == family.HouseNumber);
+            if (fam != null) {
+                throw new InvalidDataException("This family already exists");
+            }
+            file.Families.Add(family);
+            file.SaveDataToFile();
+            return family;
         }
 
-        public Task<Family> RemoveFamilyAsync(string streetName, int houseNumber) {
-            throw new System.NotImplementedException();
+        public async Task<Family> RemoveFamilyAsync(string streetName, int houseNumber) {
+            Family fam = await GetFamilyAsync(streetName, houseNumber);
+            file.Families.Remove(fam);
+            file.SaveDataToFile();
+            return fam;
         }
 
-        public Task<Family> UpdateFamilyAsync(Family family) {
-            throw new System.NotImplementedException();
+        public async Task<Family> UpdateFamilyAsync(Family family) {
+            Family fam = await GetFamilyAsync(family.StreetName, family.HouseNumber);
+            fam.StreetName = family.StreetName;
+            fam.HouseNumber = family.HouseNumber;
+            fam.Pets = family.Pets;
+            fam.Children = family.Children;
+            fam.Adults = family.Adults;
+            file.SaveDataToFile();
+            return fam;
         }
 
         public async Task<Adult> AddAdultAsync(string streetName, int houseNumber, Adult adult) {
@@ -75,7 +97,6 @@ namespace FamilyManagerWebAPI.Data {
                 }
             }
             file.SaveDataToFile();
-
         }
 
         public async Task<Adult> UpdateAdultAsync(int id, Adult a) {
