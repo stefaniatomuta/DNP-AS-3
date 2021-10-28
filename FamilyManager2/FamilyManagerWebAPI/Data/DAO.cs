@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Models;
 
@@ -64,28 +66,58 @@ namespace FamilyManagerWebAPI.Data {
             throw new System.NotImplementedException();
         }
 
-        public Task<IList<Child>> GetChildrenAsync() {
-            throw new System.NotImplementedException();
+        public async Task<IList<Child>> GetChildrenAsync() {
+            IList<Child> children = new List<Child>();
+            foreach (Person p in file.People) {
+                if (p is Child child) {
+                    children.Add(child);
+                }
+            }
+            return children;
         }
 
-        public Task<IList<Child>> GetChildrenAsync(string streetName, int houseNumber) {
-            throw new System.NotImplementedException();
+        public async Task<IList<Child>> GetChildrenAsync(string streetName, int houseNumber) {
+            Family family = file.Families.FirstOrDefault(f => f.StreetName.Equals(streetName) && f.HouseNumber == houseNumber);
+            if (family == null) throw new NullReferenceException("No such family found");
+            return family.Children;
         }
 
-        public Task<Child> GetChildAsync(int childId) {
-            throw new System.NotImplementedException();
+        public async Task<Child> GetChildAsync(int childId) {
+            Child child = (await GetChildrenAsync()).FirstOrDefault(c => c.Id == childId);
+            if (child == null) throw new NullReferenceException("No such child found");
+            return child;
         }
 
-        public Task<Child> AddChildAsync(string streetName, int houseNumber, Child child) {
-            throw new System.NotImplementedException();
+        public async Task<Child> AddChildAsync(string streetName, int houseNumber, Child child) {
+            Family family = file.Families.FirstOrDefault(f => f.StreetName.Equals(streetName) && f.HouseNumber == houseNumber);
+            if (family == null) throw new NullReferenceException("No such child found");
+            int current = family.Children.Max(c => c.Id);
+            child.Id = current + 1;
+            family.Children.Add(child);
+            file.SaveData();
+            return child;
         }
 
-        public Task<Child> UpdateChildAsync(int childId, Child updatedChild) {
-            throw new System.NotImplementedException();
+        public async Task<Child> UpdateChildAsync(int childId, Child updatedChild) {
+            Child child = await GetChildAsync(childId);
+            child.Age = updatedChild.Age;
+            child.Height = updatedChild.Height;
+            child.Sex = updatedChild.Sex;
+            child.Weight = updatedChild.Weight;
+            child.EyeColor = updatedChild.EyeColor;
+            child.FirstName = updatedChild.FirstName;
+            child.HairColor = updatedChild.HairColor;
+            child.LastName = updatedChild.LastName;
+            child.Interests = updatedChild.Interests;
+            child.Pets = child.Pets;
+            file.SaveData();
+            return child;
         }
 
-        public Task DeleteChildAsync(int childId) {
-            throw new System.NotImplementedException();
+        public async Task DeleteChildAsync(int childId) {
+            Child child = await GetChildAsync(childId);
+            file.People.Remove(child);
+            file.SaveData();
         }
 
         public Task<Pet> GetPetAsync(int petId) {
