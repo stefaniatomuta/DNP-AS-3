@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Models;
@@ -12,37 +14,63 @@ namespace FamilyManagerWebAPI.Data {
         }
 
         public async Task<IList<string>> GetEyeColorsAsync() {
-            throw new System.NotImplementedException();
+            return file.People.Select(p => p.EyeColor).Distinct().ToList();
         }
 
         public async Task<IList<string>> GetHairColorsAsync() {
-            throw new System.NotImplementedException();
+            return file.People.Select(p => p.HairColor).Distinct().ToList();        
         }
-
 
         public async Task<IList<Family>> GetFamiliesAsync() {
             List<Family> families = new List<Family>(file.Families);
             return families;
         }
 
-        public Task<Family> GetFamilyAsync(string streetName, int houseNumber) {
-            throw new System.NotImplementedException();
+        public async Task<Family> GetFamilyAsync(string streetName, int houseNumber) {
+            Family fam = file.Families.FirstOrDefault(f => f.StreetName.Equals(streetName) && f.HouseNumber == houseNumber);
+            if (fam == null) {
+                throw new NullReferenceException("No family was found with these street name and house number");
+            }
+            return fam;
         }
 
-        public Task<Family> AddFamilyAsync(Family family) {
-            throw new System.NotImplementedException();
+        public async Task<Family> AddFamilyAsync(Family family) {
+            Family fam = file.Families.FirstOrDefault(f =>
+                f.StreetName.Equals(family.StreetName) && f.HouseNumber == family.HouseNumber);
+            if (fam != null) {
+                throw new InvalidDataException("This family already exists");
+            }
+            file.Families.Add(family);
+            file.SaveDataToFile();
+            return family;
         }
 
-        public Task<Family> RemoveFamilyAsync(string streetName, int houseNumber) {
-            throw new System.NotImplementedException();
+        public async Task<Family> RemoveFamilyAsync(string streetName, int houseNumber) {
+            Family fam = await GetFamilyAsync(streetName, houseNumber);
+            file.Families.Remove(fam);
+            file.SaveDataToFile();
+            return fam;
         }
 
-        public Task<Family> UpdateFamilyAsync(Family family) {
-            throw new System.NotImplementedException();
+        public async Task<Family> UpdateFamilyAsync(Family family) {
+            Family fam = await GetFamilyAsync(family.StreetName, family.HouseNumber);
+            fam.StreetName = family.StreetName;
+            fam.HouseNumber = family.HouseNumber;
+            fam.Pets = family.Pets;
+            fam.Children = family.Children;
+            fam.Adults = family.Adults;
+            file.SaveDataToFile();
+            return fam;
         }
 
-        public Task<Adult> AddAdultAsync(string streetName, int houseNumber, Adult adult) {
-            throw new System.NotImplementedException();
+        public async Task<Adult> AddAdultAsync(string streetName, int houseNumber, Adult adult) {
+            foreach (Family fam in file.Families) {
+                if (fam.StreetName.Equals(streetName) && fam.HouseNumber == houseNumber) {
+                    fam.Adults.Add(adult);
+                }
+            }
+            file.SaveDataToFile();
+            return adult;
         }
         public async Task<IList<Adult>> GetAdultsByFamilyAsync(string streetName, int houseNumber) {
             return file.Families.First(f => f.StreetName.Equals(streetName) && f.HouseNumber == houseNumber).Adults;
@@ -50,7 +78,11 @@ namespace FamilyManagerWebAPI.Data {
         
         public async Task<Adult> GetAdultAsync(int id) {
             IList<Adult> adults = await GetAdultsAsync();
-            return adults.FirstOrDefault(adult => adult.Id == id);
+            Adult adult = adults.FirstOrDefault(adult => adult.Id == id);
+            if (adult == null) {
+                throw new NullReferenceException("There is no adult with such id");
+            }
+            return adult;
         }
 
         public async Task DeleteAdultAsync(int id) {
@@ -58,13 +90,16 @@ namespace FamilyManagerWebAPI.Data {
                 foreach (var adult in family.Adults) {
                     if (adult.Id == id) 
                         family.Adults.Remove(adult);
+                    else {
+                        throw new NullReferenceException("Cannot delete an adult that does not exist with that id");
+                    }
                 }
             }
+            file.SaveDataToFile();
         }
 
         public async Task<Adult> UpdateAdultAsync(int id, Adult a) {
-            IList<Adult> adults = await GetAdultsAsync();
-            Adult adult = adults.FirstOrDefault(adult => adult.Id == id);
+            Adult adult = await GetAdultAsync(id);
             adult.FirstName = a.FirstName;
             adult.LastName = a.LastName;
             adult.HairColor = a.HairColor;
@@ -73,6 +108,7 @@ namespace FamilyManagerWebAPI.Data {
             adult.Height = a.Height;
             adult.Weight = a.Weight;
             adult.EyeColor = a.EyeColor;
+            file.SaveDataToFile();
             return adult;
         }
 
@@ -86,28 +122,58 @@ namespace FamilyManagerWebAPI.Data {
             return adults;
         }
 
-        public Task<IList<Child>> GetChildrenAsync() {
-            throw new System.NotImplementedException();
+        public async Task<IList<Child>> GetChildrenAsync() {
+            IList<Child> children = new List<Child>();
+            foreach (Family f in file.Families) {
+                foreach (Child c in f.Children) {
+                    children.Add(c);
+                }
+            }
+            return children;
         }
 
-        public Task<IList<Child>> GetChildrenAsync(string streetName, int houseNumber) {
-            throw new System.NotImplementedException();
+        public async Task<IList<Child>> GetChildrenAsync(string streetName, int houseNumber) {
+            Family family = file.Families.FirstOrDefault(f => f.StreetName.Equals(streetName) && f.HouseNumber == houseNumber);
+            if (family == null) throw new NullReferenceException("No such family found");
+            return family.Children;
         }
 
-        public Task<Child> GetChildAsync(int childId) {
-            throw new System.NotImplementedException();
+        public async Task<Child> GetChildAsync(int childId) {
+            Child child = (await GetChildrenAsync()).FirstOrDefault(c => c.Id == childId);
+            if (child == null) throw new NullReferenceException("No such child found");
+            return child;
         }
 
-        public Task<Child> AddChildAsync(string streetName, int houseNumber, Child child) {
-            throw new System.NotImplementedException();
+        public async Task<Child> AddChildAsync(string streetName, int houseNumber, Child child) {
+            Family family = file.Families.FirstOrDefault(f => f.StreetName.Equals(streetName) && f.HouseNumber == houseNumber);
+            if (family == null) throw new NullReferenceException("No such child found");
+            int current = family.Children.Max(c => c.Id);
+            child.Id = current + 1;
+            family.Children.Add(child);
+            file.SaveDataToFile();
+            return child;
         }
 
-        public Task<Child> UpdateChildAsync(int childId, Child updatedChild) {
-            throw new System.NotImplementedException();
+        public async Task<Child> UpdateChildAsync(int childId, Child updatedChild) {
+            Child child = await GetChildAsync(childId);
+            child.Age = updatedChild.Age;
+            child.Height = updatedChild.Height;
+            child.Sex = updatedChild.Sex;
+            child.Weight = updatedChild.Weight;
+            child.EyeColor = updatedChild.EyeColor;
+            child.FirstName = updatedChild.FirstName;
+            child.HairColor = updatedChild.HairColor;
+            child.LastName = updatedChild.LastName;
+            child.Interests = updatedChild.Interests;
+            child.Pets = child.Pets;
+            file.SaveDataToFile();
+            return child;
         }
 
-        public Task DeleteChildAsync(int childId) {
-            throw new System.NotImplementedException();
+        public async Task DeleteChildAsync(int childId) {
+            Child child = await GetChildAsync(childId);
+            file.People.Remove(child);
+            file.SaveDataToFile();
         }
 
         public async Task<Pet> GetPetAsync(int petId) {
@@ -125,6 +191,7 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<Pet> AddPetAsync(Pet pet, string street, int number, int childId) {
             file.Families.First(f => f.StreetName.Equals(street) && f.HouseNumber == number).Children.First(c => c.Id == childId).Pets.Add(pet);
+            file.SaveDataToFile();
             return pet;
         }
 
@@ -133,6 +200,7 @@ namespace FamilyManagerWebAPI.Data {
             p.Age = pet.Age;
             p.Name = pet.Name;
             p.Species = pet.Species;
+            file.SaveDataToFile();
             return p;
         }
 
@@ -141,6 +209,7 @@ namespace FamilyManagerWebAPI.Data {
                 if (pet.Id == petId)
                     file.Pets.Remove(pet);
             }
+            file.SaveDataToFile();
         }
     }
 }
