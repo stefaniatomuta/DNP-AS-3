@@ -1,16 +1,17 @@
 ﻿@page "/AddFamily"
 @using FamilyManager2UI.Data
+@using FamilyManager2UI.WebClient
 @using FamilyManagerWebAPI.Controllers
 @using FamilyManagerWebAPI.Data
 @using Microsoft.AspNetCore.Components
 @using Models
 @inject NavigationManager NavMng;
-@inject FamiliesController familyController;
+@inject IRestClient restClient;
 <div class="container mt-6 mb-6 p-6 my-auto h-100 w-50">
     <div class="card p-4">
         <div class="d-flex flex-column justify-content-center align-items-center col-sm">
             <h3>Add a New Family</h3>
-            <EditForm Model="@family" OnSubmit="@CreateNewFamily">
+            <EditForm Model="@family" OnSubmit="@CreateNewFamilyAsync">
                 <DataAnnotationsValidator/>
                 <ValidationSummary/>
                 <p>Street Name:</p>
@@ -37,15 +38,15 @@
     protected override async Task OnInitializedAsync() {
     }
     
-    private void CreateNewFamily() {
+    private async Task CreateNewFamilyAsync() {
         try {
-            familyController.AddFamilyAsync(new Family() {
+            await restClient.PostAsync(new Family() {
                 Adults = new List<Adult>(),
                 Children = new List<Child>(),
                 HouseNumber = family.HouseNumber,
                 StreetName = family.StreetName,
                 Pets = new List<Pet>()
-            });
+            },family.StreetName,family.HouseNumber);
             NavMng.NavigateTo("/AddFamilyMember");
         }
         catch (Exception e) {

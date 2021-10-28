@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 using Models;
 
 namespace FamilyManager2UI.WebClient {
-    public class RestClient {
+    public class RestClient : IRestClient {
         private string requestUrl = "https://localhost:5002";
 
 
         //Get methods 
-        public async Task<List<T>> Get<T>() {
+        public async Task<List<T>> GetAsync<T>() {
             using HttpClient client = new HttpClient();
             string url = "";
             switch (typeof(T).Name) {
@@ -42,7 +42,7 @@ namespace FamilyManager2UI.WebClient {
             return items;
         }
 
-        public async Task<T> Get<T>(int id) {
+        public async Task<T> GetAsync<T>(int id) {
             using HttpClient client = new HttpClient();
             string url = "";
             switch (typeof(T).Name) {
@@ -71,7 +71,7 @@ namespace FamilyManager2UI.WebClient {
             return item;
         }
 
-        public async Task<List<T>> Get<T>(string streetName, int streetNumber) {
+        public async Task<T> GetAsync<T>(string streetName, int streetNumber) {
             using HttpClient client = new HttpClient();
             HttpResponseMessage responseMessage =
                 await client.GetAsync($"{requestUrl}/families/{streetName}/{streetNumber}");
@@ -79,7 +79,7 @@ namespace FamilyManager2UI.WebClient {
                 throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             string result = await responseMessage.Content.ReadAsStringAsync();
 
-            List<T> items = JsonSerializer.Deserialize<List<T>>(result, new JsonSerializerOptions {
+            T items = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
 
@@ -87,7 +87,7 @@ namespace FamilyManager2UI.WebClient {
         }
 
         //Post methods
-        public async Task<T> Post<T>(T item, string streetName, int streetNumber) {
+        public async Task<T> PostAsync<T>(T item, string streetName, int streetNumber) {
             using HttpClient client = new HttpClient();
             string url = "";
             switch (typeof(T).Name) {
@@ -115,7 +115,7 @@ namespace FamilyManager2UI.WebClient {
             return newItem;
         }
 
-        public async Task<T> Post<T>(T item, string streetName, int streetNumber, int childId) {
+        public async Task<T> PostAsync<T>(T item, string streetName, int streetNumber, int childId) {
             using HttpClient client = new HttpClient();
             string itemAsJson = JsonSerializer.Serialize(item);
             StringContent content = new StringContent(
@@ -134,7 +134,7 @@ namespace FamilyManager2UI.WebClient {
         }
 
         //Put methods
-        public async Task<T> Put<T>(T item, int id) {
+        public async Task<T> PutAsync<T>(T item, int id) {
             using HttpClient client = new HttpClient();
             string url = "";
             switch (typeof(T).Name) {
@@ -168,7 +168,7 @@ namespace FamilyManager2UI.WebClient {
         }
 
         //Delete methods
-        public async Task<object> Delete<T>(int id) {
+        public async Task<object> DeleteAsync<T>(int id) {
             using HttpClient client = new HttpClient();
             string url = "";
             switch (typeof(T).Name) {
@@ -191,6 +191,10 @@ namespace FamilyManager2UI.WebClient {
             if (!responseMessage.IsSuccessStatusCode)
                 throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             return null;
+        }
+
+        public Task<object> DeleteAsync<T>(string streetName, int streetNumber) {
+            throw new NotImplementedException();
         }
     }
 }

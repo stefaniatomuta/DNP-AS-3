@@ -3,9 +3,10 @@
 @using FamilyManager2UI.Data
 @using Models;
 @using System.Threading
+@using FamilyManager2UI.WebClient
 @using FamilyManagerWebAPI.Controllers
 @inject NavigationManager navigationManager;
-@inject FamiliesController familyController;
+@inject IRestClient RestClient;
 @inherits MainLayout ;
 <!-- role, name, age, pets if any, id, age, sex -->
 
@@ -171,7 +172,7 @@
     int currentSlide = 0;
 
     protected override async Task OnInitializedAsync() {
-        family = await familyController.GetFamilyAsync(Address, Number).Result;
+        family = await RestClient.GetAsync<Family>(Address,Number);
         familyMembers = family.GetAllMembers();
         filteredFamilyMembers = familyMembers;
 
@@ -298,8 +299,8 @@
         navigationManager.NavigateTo($"PetDetails/{itemId}");
     }
     
-    private void RemoveFamily() {
-        familyController.RemoveFamilyAsync(Address,Number);
+    private async Task RemoveFamilyAsync() {
+        RestClient.DeleteAsync<Family>(Address,Number);
         navigationManager.NavigateTo("/FamilyList");
     }
 

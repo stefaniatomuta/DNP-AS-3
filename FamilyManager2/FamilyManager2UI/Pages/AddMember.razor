@@ -1,8 +1,9 @@
 ﻿@page "/Addmember/{streetName}/{houseNumber:int}/{type}"
 @using Data;
+@using FamilyManager2UI.WebClient
 @using Models
 @inject NavigationManager NavMng;
-@inject IFamilyData FamilyData;
+@inject IRestClient RestClient;
 <div class="text-center">
     <h3>Add a New @type</h3>
 </div>
@@ -10,7 +11,7 @@
 @if (type.Equals("Pet")) {
     <div class="container text-center">
     <div class="card text-center py-3">
-        <EditForm Model="@pet" OnValidSubmit="@AddPet">
+        <EditForm Model="@pet" OnValidSubmit="@AddPetAsync">
             <DataAnnotationsValidator/>
             <ValidationSummary/>
             <label>Child:</label>
@@ -41,7 +42,7 @@
     </div>
     </div>
 } else {
-    <EditForm Model="@person" OnValidSubmit="@AddPerson">
+    <EditForm Model="@person" OnValidSubmit="@AddPersonAsync">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
         <div class="container text-center">
@@ -179,23 +180,23 @@
     private string sex;
 
     protected override async Task OnInitializedAsync() {
-        family = FamilyData.GetFamily(streetName, houseNumber);
+        family = await RestClient.GetAsync<Family>(streetName, houseNumber);
         person.HairColor = "Black";
         person.EyeColor = "Blue";
         person.Sex = "F";
     }
 
-    private void AddPet() {
+    private async Task AddPetAsync() {
         if (!person.FirstName.Equals("None"))
-            FamilyData.AddPet(pet, family, family.Children.First(c => c.FirstName.Equals(person.FirstName)));
+            await RestClient.PostAsync(pet, family.StreetName, family.HouseNumber, family.Children.First(c => c.FirstName.Equals(person.FirstName)).Id);
         else
-            FamilyData.AddPet(pet, family);
+            await RestClient.PostAsync(pet, family.StreetName, family.HouseNumber);
         NavMng.NavigateTo("/AddFamilyMember");
     }
 
-    private void AddPerson() {
+    private async Task AddPersonAsync() {
         if (type.Equals("Adult")) {
-            FamilyData.AddAdult(new Adult() {
+            await RestClient.PostAsync(new Adult() {
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 EyeColor = person.EyeColor,
@@ -208,10 +209,10 @@
                     JobTitle = job.JobTitle,
                     Salary = job.Salary
                 }
-            }, family);
+            }, family.StreetName,family.HouseNumber);
         }
         else {
-            FamilyData.AddChild(new Child() {
+            await RestClient.PostAsync(new Child() {
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 EyeColor = person.EyeColor,
@@ -227,7 +228,7 @@
                         Type = interest.Type
                     }
                 }
-            }, family);
+            }, family.StreetName,family.HouseNumber);
         }
         NavMng.NavigateTo("/AddFamilyMember");
     }

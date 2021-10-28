@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FamilyManager2UI.Data;
+using FamilyManager2UI.WebClient;
+using FamilyManagerWebAPI.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace FamilyManager2UI
@@ -30,7 +32,7 @@ namespace FamilyManager2UI
             services.AddRazorPages();
             services.AddServerSideBlazor();
             
-            services.AddSingleton<IFamilyData, FamilyJSONData>();
+            services.AddSingleton<IRestClient, RestClient>();
             services.AddSingleton<IUserService, UserListService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             services.AddAuthorization(options => {
