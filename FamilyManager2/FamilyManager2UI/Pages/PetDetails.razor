@@ -1,14 +1,14 @@
 ﻿@page "/PetDetails/{id:int}"
 @using Models
 @using Data
+@using FamilyManager2UI.WebClient
 @inject NavigationManager navigationManager;
-@inject IFamilyData FamilyData;
+@inject IRestClient restClient;
 
 <h1 class="d-flex justify-content-center">@pet.Name</h1>
 <div class="container mt-6 mb-6 p-6 my-auto h-100 w-50">
     <div class="card p-4">
         <div class=" image d-flex flex-column justify-content-center align-items-center">
-            <!--TODO: change img-->
             @if (pet.Species.ToLower().Equals("dog")) {
                 <button class="btn btn-secondary mt-3">
                     <img src="/Images/dog.jpg" height="100" width="100"/><br/>
@@ -44,6 +44,6 @@
     private Pet pet;
 
     protected override async Task OnInitializedAsync() {
-        pet = FamilyData.GetPet(Id);
+        pet = await restClient.GetAsync<Pet>(Id);
     }
 }
