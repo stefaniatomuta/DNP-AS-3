@@ -58,11 +58,11 @@ namespace FamilyManagerWebAPI.Data {
             IList<Adult> adults = await GetAdultsAsync();
             Adult adult = adults.FirstOrDefault(adult => adult.Id == id);
             adults.Remove(adult);
+            file.SaveDataToFile();
         }
 
         public async Task<Adult> UpdateAdultAsync(int id, Adult a) {
-            IList<Adult> adults = await GetAdultsAsync();
-            Adult adult = adults.FirstOrDefault(adult => adult.Id == id);
+            Adult adult = await GetAdultAsync(id);
             adult.FirstName = a.FirstName;
             adult.LastName = a.LastName;
             adult.HairColor = a.HairColor;
@@ -71,6 +71,7 @@ namespace FamilyManagerWebAPI.Data {
             adult.Height = a.Height;
             adult.Weight = a.Weight;
             adult.EyeColor = a.EyeColor;
+            file.SaveDataToFile();
             return adult;
         }
 
@@ -86,9 +87,9 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<IList<Child>> GetChildrenAsync() {
             IList<Child> children = new List<Child>();
-            foreach (Person p in file.People) {
-                if (p is Child child) {
-                    children.Add(child);
+            foreach (Family f in file.Families) {
+                foreach (Child c in f.Children) {
+                    children.Add(c);
                 }
             }
             return children;
@@ -112,7 +113,7 @@ namespace FamilyManagerWebAPI.Data {
             int current = family.Children.Max(c => c.Id);
             child.Id = current + 1;
             family.Children.Add(child);
-            file.SaveData();
+            file.SaveDataToFile();
             return child;
         }
 
@@ -128,14 +129,14 @@ namespace FamilyManagerWebAPI.Data {
             child.LastName = updatedChild.LastName;
             child.Interests = updatedChild.Interests;
             child.Pets = child.Pets;
-            file.SaveData();
+            file.SaveDataToFile();
             return child;
         }
 
         public async Task DeleteChildAsync(int childId) {
             Child child = await GetChildAsync(childId);
             file.People.Remove(child);
-            file.SaveData();
+            file.SaveDataToFile();
         }
 
         public async Task<Pet> GetPetAsync(int petId) {
@@ -153,6 +154,7 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<Pet> AddPetAsync(Pet pet, string street, int number, int childId) {
             file.Families.First(f => f.StreetName.Equals(street) && f.HouseNumber == number).Children.First(c => c.Id == childId).Pets.Add(pet);
+            file.SaveDataToFile();
             return pet;
         }
 
@@ -161,6 +163,7 @@ namespace FamilyManagerWebAPI.Data {
             p.Age = pet.Age;
             p.Name = pet.Name;
             p.Species = pet.Species;
+            file.SaveDataToFile();
             return p;
         }
 
@@ -169,6 +172,7 @@ namespace FamilyManagerWebAPI.Data {
                 if (pet.Id == petId)
                     file.Pets.Remove(pet);
             }
+            file.SaveDataToFile();
         }
     }
 }
