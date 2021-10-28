@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
 using System.Threading.Tasks;
 using Models;
 
@@ -108,28 +107,37 @@ namespace FamilyManagerWebAPI.Data {
             throw new System.NotImplementedException();
         }
 
-        public Task<Pet> GetPetAsync(int petId) {
-            throw new System.NotImplementedException();
+        public async Task<Pet> GetPetAsync(int petId) {
+            return file.Pets.First(p => petId == p.Id);
         }
 
-        public Task<IList<Pet>> GetPetsAsync(string street, int number) {
-            throw new System.NotImplementedException();
+        public async Task<IList<Pet>> GetPetsAsync(string street, int number) {
+            return file.Families.First(f => f.StreetName.Equals(street) && f.HouseNumber == number).Pets;
         }
 
-        public Task<Pet> AddPetAsync(Pet pet, string street, int number) {
-            throw new System.NotImplementedException();
+        public async Task<Pet> AddPetAsync(Pet pet, string street, int number) {
+            file.Families.First(f => f.StreetName.Equals(street) && f.HouseNumber == number).Pets.Add(pet);
+            return pet;
         }
 
-        public Task<Pet> AddPetAsync(Pet pet, string street, int number, int childId) {
-            throw new System.NotImplementedException();
+        public async Task<Pet> AddPetAsync(Pet pet, string street, int number, int childId) {
+            file.Families.First(f => f.StreetName.Equals(street) && f.HouseNumber == number).Children.First(c => c.Id == childId).Pets.Add(pet);
+            return pet;
         }
 
-        public Task<Pet> RemovePetAsync(int petId) {
-            throw new System.NotImplementedException();
+        public async Task<Pet> UpdatePetAsync(int id, Pet pet) {
+            Pet p = file.Pets.First(p => p.Id == id);
+            p.Age = pet.Age;
+            p.Name = pet.Name;
+            p.Species = pet.Species;
+            return p;
         }
 
-        public Task<Pet> UpdatePetAsync(int id, Pet pet) {
-            throw new System.NotImplementedException();
+        public async Task RemovePetAsync(int petId) {
+            foreach (var pet in file.Pets) {
+                if (pet.Id == petId)
+                    file.Pets.Remove(pet);
+            }
         }
     }
 }
