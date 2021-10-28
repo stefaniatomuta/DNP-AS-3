@@ -42,11 +42,10 @@ namespace FamilyManagerWebAPI.Controllers {
         
         [HttpGet]
         [Route("families/{streetName}/{houseNumber:int}")]
-        public async Task<ActionResult<Adult>> GetAdultByFamily([FromRoute] string streetName, [FromRoute] int houseNumber,
-            [FromBody] Adult adult) {
+        public async Task<ActionResult<Adult>> GetAdultsByFamily([FromRoute] string streetName, [FromRoute] int houseNumber) {
             try {
-                Adult adult1 = await service.GetAdultByFamilyAsync(streetName, houseNumber, adult.Id);
-                return Ok(adult);
+                IList<Adult> adult1 = await service.GetAdultsByFamilyAsync(streetName, houseNumber);
+                return Ok(adult1);
             }
             catch (NullReferenceException e) {
                 return NotFound(e.Message);
@@ -81,11 +80,11 @@ namespace FamilyManagerWebAPI.Controllers {
             }
         }
         
-        [HttpPatch]
+        [HttpPut]
         [Route("{id:int}")]
-        public async Task<ActionResult<Adult>> UpdateToDo([FromBody] int id) {
+        public async Task<ActionResult<Adult>> UpdateToDo([FromBody] int id, Adult adult) {
             try {
-                Adult updated = await service.UpdateAdultAsync(id);
+                Adult updated = await service.UpdateAdultAsync(id, adult);
                 return Ok(updated);
             }
             catch (Exception e) {
