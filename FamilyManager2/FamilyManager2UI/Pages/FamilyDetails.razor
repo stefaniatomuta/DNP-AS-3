@@ -42,7 +42,7 @@
                 </div>
                 <AuthorizeView Policy="@Policies.IsAdmin">
                     <div class="d-flex justify-content-end">
-                        <button class="btn mx-auto" @onclick="@(() => RemoveFamily())">
+                        <button class="btn mx-auto" @onclick="@(() => RemoveFamilyAsync())">
                             <i class="oi oi-trash" style="color:red"/>
                         </button>
                     </div>
@@ -300,7 +300,7 @@
     }
     
     private async Task RemoveFamilyAsync() {
-        RestClient.DeleteAsync<Family>(Address,Number);
+        await RestClient.DeleteAsync<Family>(Address,Number);
         navigationManager.NavigateTo("/FamilyList");
     }
 

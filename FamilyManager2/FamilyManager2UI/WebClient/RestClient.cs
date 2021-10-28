@@ -193,8 +193,12 @@ namespace FamilyManager2UI.WebClient {
             return null;
         }
 
-        public Task<object> DeleteAsync<T>(string streetName, int streetNumber) {
-            throw new NotImplementedException();
+        public async Task<object> DeleteAsync<T>(string streetName, int streetNumber) {
+            using HttpClient client = new HttpClient();
+            HttpResponseMessage responseMessage = await client.DeleteAsync($"{requestUrl}/families/{streetName}/{streetNumber}");
+            if (!responseMessage.IsSuccessStatusCode)
+                throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+            return null;
         }
     }
 }
