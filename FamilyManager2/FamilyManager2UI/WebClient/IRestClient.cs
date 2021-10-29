@@ -7,7 +7,7 @@ namespace FamilyManager2UI.WebClient {
         public Task<T> GetAsync<T>(int id);
         public Task<T> GetAsync<T>(string streetName, int streetNumber);
         public Task<T> GetAsync<T>(string username, string password);
-        public Task<T> PostAsync<T>(T user);
+        public Task PostAsync<T>(T user);
         public Task<T> PostAsync<T>(T item, string streetName, int streetNumber);
         public Task<T> PostAsync<T>(T item, string streetName, int streetNumber, int childId);
         public Task<T> PutAsync<T>(T item, int id);

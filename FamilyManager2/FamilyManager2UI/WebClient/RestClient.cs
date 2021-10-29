@@ -123,7 +123,7 @@ namespace FamilyManager2UI.WebClient {
 
         //Post methods
         
-        public async Task<T> PostAsync<T>(T user) {
+        public async Task PostAsync<T>(T user) {
             using HttpClient client = new HttpClient();
 
             string itemAsJson = JsonSerializer.Serialize(user);
@@ -137,7 +137,7 @@ namespace FamilyManager2UI.WebClient {
             T newItem = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
-            return newItem;
+            // return newItem;
         }
         
         

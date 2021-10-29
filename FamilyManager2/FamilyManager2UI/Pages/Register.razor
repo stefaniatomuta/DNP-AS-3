@@ -42,7 +42,7 @@
     public async Task PerformRegistration() {
         ErrorMessage = "";
         try {
-            ((CustomAuthenticationStateProvider)AuthenticationStateProvider).ValidateRegister(Username, Password, ConfirmationPassword);
+            await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).ValidateRegister(Username, Password, ConfirmationPassword);
             Username = "";
             Password = "";
             NavigationManager.NavigateTo("/Login");
