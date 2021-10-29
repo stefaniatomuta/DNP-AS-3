@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -70,6 +71,13 @@ namespace FamilyManagerWebAPI.Data {
         public async Task<Adult> AddAdultAsync(string streetName, int houseNumber, Adult adult) {
             foreach (Family fam in file.Families) {
                 if (fam.StreetName.Equals(streetName) && fam.HouseNumber == houseNumber) {
+                    int current;
+                    IList<Adult> adults = await GetAdultsAsync();
+                    if (adults.Count == 0) 
+                        current = 0;
+                    else
+                        current = (adults.Max(a => a.Id));
+                    adult.Id = current + 1;
                     fam.Adults.Add(adult);
                 }
             }
@@ -151,7 +159,12 @@ namespace FamilyManagerWebAPI.Data {
         public async Task<Child> AddChildAsync(string streetName, int houseNumber, Child child) {
             Family family = file.Families.FirstOrDefault(f => f.StreetName.Equals(streetName) && f.HouseNumber == houseNumber);
             if (family == null) throw new NullReferenceException("No such child found");
-            int current = family.Children.Max(c => c.Id);
+            int current;
+            IList<Child> children = await GetChildrenAsync();
+            if (children.Count == 0) 
+                current = 0;
+            else
+                current = (children.Max(c => c.Id));
             child.Id = current + 1;
             family.Children.Add(child);
             file.SaveDataToFile();
@@ -189,11 +202,24 @@ namespace FamilyManagerWebAPI.Data {
         }
 
         public async Task<Pet> AddPetAsync(Pet pet, string street, int number) {
+            int current;
+            if (file.Pets.Count == 0) 
+                current = 0;
+            else
+                current = (file.Pets.Max(p => p.Id));
+            pet.Id = current + 1;
             file.Families.First(f => f.StreetName.Equals(street) && f.HouseNumber == number).Pets.Add(pet);
+            file.SaveDataToFile();
             return pet;
         }
 
         public async Task<Pet> AddPetAsync(Pet pet, string street, int number, int childId) {
+            int current;
+            if (file.Pets.Count == 0) 
+                current = 0;
+            else
+                current = (file.Pets.Max(p => p.Id));
+            pet.Id = current + 1;
             file.Families.First(f => f.StreetName.Equals(street) && f.HouseNumber == number).Children.First(c => c.Id == childId).Pets.Add(pet);
             file.SaveDataToFile();
             return pet;

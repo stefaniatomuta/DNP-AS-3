@@ -173,15 +173,12 @@
 
     protected override async Task OnInitializedAsync() {
         family = await RestClient.GetAsync<Family>(Address,Number);
-        Console.WriteLine(family.StreetName);
         familyMembers = family.GetAllMembers();
         filteredFamilyMembers = familyMembers;
 
         pets = family.Pets;
         filteredPets = pets;
-        
     }
-    
 
     public void Manually(bool backwards) {
         if (backwards) {
