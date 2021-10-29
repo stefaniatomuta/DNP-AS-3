@@ -11,9 +11,9 @@ namespace FamilyManagerWebAPI.Controllers {
     [Route("[controller]")]
     public class FamiliesController : ControllerBase {
         
-        public IFamilyDAO FamilyData { get; }
+        public IDAO FamilyData { get; }
 
-        public FamiliesController(IFamilyDAO familyData) {
+        public FamiliesController(IDAO familyData) {
             FamilyData = familyData;
         }
 
