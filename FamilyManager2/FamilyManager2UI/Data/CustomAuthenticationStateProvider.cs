@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
+using FamilyManager2UI.WebClient;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using Models;
@@ -12,12 +13,12 @@ using Models;
 namespace FamilyManager2UI.Data {
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider {
         private readonly IJSRuntime jsRuntime;
-        private readonly IUserService userService;
+        private readonly IRestClient RestClient;
         private User cachedUser;
 
-        public CustomAuthenticationStateProvider(IJSRuntime jsRuntime, IUserService userService) {
+        public CustomAuthenticationStateProvider(IJSRuntime jsRuntime, IRestClient restClient) {
             this.jsRuntime = jsRuntime;
-            this.userService = userService;
+            this.RestClient = restClient;
         }
         
         public override async Task<AuthenticationState> GetAuthenticationStateAsync() {
@@ -36,13 +37,13 @@ namespace FamilyManager2UI.Data {
             return await Task.FromResult(new AuthenticationState(cachedClaimsPrincipal));
         }
 
-        public void ValidateLogin(string username, string password) {
+        public async Task ValidateLogin(string username, string password) {
             if (string.IsNullOrWhiteSpace(username)) throw new Exception("Please specify a username");
             if (string.IsNullOrWhiteSpace(password)) throw new Exception("Please specify a password");
 
             ClaimsIdentity identity = new ClaimsIdentity();
             try {
-                User user = userService.ValidateUser(username, password);
+                User user = await RestClient.GetAsync<User>(username, password);
                 identity = SetupClaimsForUser(user);
                 string serializedData = JsonSerializer.Serialize(user);
                 jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serializedData);
@@ -54,24 +55,21 @@ namespace FamilyManager2UI.Data {
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new ClaimsPrincipal(identity))));
         }
 
-        public void ValidateRegister(string username, string password, string confirmationPassword) {
+        public async Task ValidateRegister(string username, string password, string confirmationPassword) {
             if (string.IsNullOrWhiteSpace(username)) throw new Exception("Please specify a username");
             if (string.IsNullOrWhiteSpace(password)) throw new Exception("Please specify a password");
             if (string.IsNullOrWhiteSpace(confirmationPassword)) throw new Exception("Please confirm your password");
             
             if (!password.Equals(confirmationPassword))
                 throw new Exception("Passwords do not match");
-            
-            List<User> users = userService.GetUserList();
-            if (users.FirstOrDefault(u => u.Username.Equals(username)) != null) {
-                throw new Exception("Username is already used");
-            }
-            
-            userService.AddUser(new User() {
+
+            User user = new User() {
                 Username = username,
                 Password = password,
                 Role = Role.User
-            });
+            };
+
+            await RestClient.PostAsync(user);
         }
 
         public void Logout() {

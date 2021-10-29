@@ -33,7 +33,6 @@ namespace FamilyManager2UI
             services.AddServerSideBlazor();
             
             services.AddSingleton<IRestClient, RestClient>();
-            services.AddSingleton<IUserService, UserListService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             services.AddAuthorization(options => {
                 options.AddPolicy(Policies.IsAdmin, Policies.FollowsAdminPolicy());
