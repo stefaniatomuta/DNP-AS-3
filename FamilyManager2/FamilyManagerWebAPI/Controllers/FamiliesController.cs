@@ -36,6 +36,9 @@ namespace FamilyManagerWebAPI.Controllers {
                 Family family = await FamilyData.GetFamilyAsync(streetName, houseNumber);
                 return Ok(family);
             }
+            catch (NullReferenceException e) {
+                return NotFound();
+            }
             catch (Exception e) {
                 return StatusCode(500, e.Message);
             }

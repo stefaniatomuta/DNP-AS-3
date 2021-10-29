@@ -1096,5 +1096,12 @@
       }
     ],
     "Pets": []
+  },
+  {
+    "StreetName": "aBC",
+    "HouseNumber": 10,
+    "Adults": [],
+    "Children": [],
+    "Pets": []
   }
 ]

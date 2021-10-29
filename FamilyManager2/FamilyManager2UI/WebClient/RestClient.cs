@@ -113,11 +113,10 @@ namespace FamilyManager2UI.WebClient {
             if (!responseMessage.IsSuccessStatusCode)
                 throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             string result = await responseMessage.Content.ReadAsStringAsync();
-
+            
             T items = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
-
             return items;
         }
 
@@ -155,7 +154,7 @@ namespace FamilyManager2UI.WebClient {
                     url = $"{requestUrl}/adults/{streetName}/{streetNumber}";
                     break;
                 case "Family":
-                    url = "families";
+                    url = $"{requestUrl}/families";
                     break;
             }
 

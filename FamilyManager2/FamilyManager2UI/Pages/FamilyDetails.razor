@@ -173,6 +173,7 @@
 
     protected override async Task OnInitializedAsync() {
         family = await RestClient.GetAsync<Family>(Address,Number);
+        Console.WriteLine(family.StreetName);
         familyMembers = family.GetAllMembers();
         filteredFamilyMembers = familyMembers;
 
