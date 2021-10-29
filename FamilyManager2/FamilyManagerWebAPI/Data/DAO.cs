@@ -18,9 +18,7 @@ namespace FamilyManagerWebAPI.Data {
         }
 
         public async Task<IList<string>> GetHairColorsAsync() {
-            IList<string> list  =file.People.Select(p => p.HairColor).Distinct().ToList();
-            Console.WriteLine(list[1]);
-            return list;
+            return file.People.Select(p => p.HairColor).Distinct().ToList();
         }
 
         public async Task<IList<Family>> GetFamiliesAsync() {

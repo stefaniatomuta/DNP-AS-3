@@ -130,8 +130,8 @@
     }
 
     protected override async Task OnInitializedAsync() {
-         families = await restClient.GetAsync<Family>();
-         people = new List<Person>();
+        families = await restClient.GetAsync<Family>();
+        people = new List<Person>();
         foreach (var fam in families) {
             foreach (var person in fam.Adults) {
                 people.Add(person);
@@ -140,7 +140,7 @@
                 people.Add(child);
             }
         }
-
+        
         sex = new List<ChartData>();
         sex.Add(new ChartData() {
             Name = "Male",
@@ -177,14 +177,14 @@
             Count = people.Count(p => p.Age > 55)
         });
         
-        hairColors = new List<ChartData>();   
+        hairColors = new List<ChartData>();
         foreach(var color in await restClient.GetColorAsync("haircolors")) {
             hairColors.Add(new ChartData() {
                 Name = color,
                 Count = people.Count(p => p.HairColor.Equals(color))
             });
         }
-
+        
         eyeColors = new List<ChartData>();
         foreach (var color in await restClient.GetColorAsync("eyecolors")) {
             eyeColors.Add(new ChartData() {
@@ -192,7 +192,7 @@
                 Count = people.Count(p => p.EyeColor.Equals(color))
             });
         }
-
+        
         heights = new List<ChartData>();
         heights.Add(new ChartData() {
             Name = "<130",

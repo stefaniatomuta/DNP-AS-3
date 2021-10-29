@@ -41,7 +41,7 @@ namespace FamilyManagerWebAPI.Controllers {
         }
         
         [HttpGet]
-        [Route("families/{streetName}/{houseNumber:int}")]
+        [Route("{streetName}/{houseNumber:int}")]
         public async Task<ActionResult<Adult>> GetAdultsByFamily([FromRoute] string streetName, [FromRoute] int houseNumber) {
             try {
                 IList<Adult> adult1 = await service.GetAdultsByFamilyAsync(streetName, houseNumber);
@@ -56,7 +56,7 @@ namespace FamilyManagerWebAPI.Controllers {
         }
 
         [HttpPost]
-        [Route("families/{streetName}/{houseNumber:int}")]
+        [Route("{streetName}/{houseNumber:int}")]
         public async Task<ActionResult<Adult>> AddAdult([FromRoute] string streetName, [FromRoute] int houseNumber,
             [FromBody] Adult adult) {
             try {

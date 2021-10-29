@@ -15,7 +15,7 @@ namespace FamilyManager2UI.WebClient {
             using HttpClient client = new HttpClient();
             HttpResponseMessage responseMessage = await client.GetAsync($"{requestUrl}/User?username={username}&password={password}");
             if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             string result = await responseMessage.Content.ReadAsStringAsync();
 
             T item = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
@@ -44,7 +44,7 @@ namespace FamilyManager2UI.WebClient {
 
             HttpResponseMessage responseMessage = await client.GetAsync($"{requestUrl}/{url}");
             if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             string result = await responseMessage.Content.ReadAsStringAsync();
 
             List<T> items = JsonSerializer.Deserialize<List<T>>(result, new JsonSerializerOptions {
@@ -68,13 +68,15 @@ namespace FamilyManager2UI.WebClient {
 
             HttpResponseMessage responseMessage = await client.GetAsync($"{requestUrl}/{url}");
             if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             string result = await responseMessage.Content.ReadAsStringAsync();
 
-            List<string> items = JsonSerializer.Deserialize<List<string>>(result, new JsonSerializerOptions {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
-            return items;
+            result = result.Replace("[", "");
+            result = result.Replace("]", "");
+            result = result.Replace("\"", "");
+            IList<string> colors = result.Split(",");
+            
+            return colors;
         }
 
         public async Task<T> GetAsync<T>(int id) {
@@ -97,7 +99,7 @@ namespace FamilyManager2UI.WebClient {
 
             HttpResponseMessage responseMessage = await client.GetAsync($"{requestUrl}/{url}/{id}");
             if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             string result = await responseMessage.Content.ReadAsStringAsync();
 
             T item = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
@@ -111,7 +113,7 @@ namespace FamilyManager2UI.WebClient {
             HttpResponseMessage responseMessage =
                 await client.GetAsync($"{requestUrl}/families/{streetName}/{streetNumber}");
             if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             string result = await responseMessage.Content.ReadAsStringAsync();
             
             T items = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
@@ -130,7 +132,7 @@ namespace FamilyManager2UI.WebClient {
                 itemAsJson, Encoding.UTF8, "application/Json");
             HttpResponseMessage responseMessage = await client.PostAsync($"{requestUrl}/User", content);
             if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             string result = await responseMessage.Content.ReadAsStringAsync();
 
             T newItem = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
@@ -163,7 +165,7 @@ namespace FamilyManager2UI.WebClient {
                 itemAsJson, Encoding.UTF8, "application/Json");
             HttpResponseMessage responseMessage = await client.PostAsync($"{url}", content);
             if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             string result = await responseMessage.Content.ReadAsStringAsync();
 
             T newItem = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
@@ -181,7 +183,7 @@ namespace FamilyManager2UI.WebClient {
                 await client.PostAsync($"{requestUrl}/pets/{streetName}/{streetNumber}/{childId}",
                     content);
             if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             string result = await responseMessage.Content.ReadAsStringAsync();
 
             T newItem = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
@@ -215,7 +217,7 @@ namespace FamilyManager2UI.WebClient {
             HttpResponseMessage responseMessage = await client.PutAsync($"{requestUrl}/{url}", content);
             ;
             if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             string result = await responseMessage.Content.ReadAsStringAsync();
 
             T newItem = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
@@ -246,7 +248,7 @@ namespace FamilyManager2UI.WebClient {
             HttpResponseMessage responseMessage = await client.DeleteAsync($"{requestUrl}/{url}");
             ;
             if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             return null;
         }
 
@@ -254,7 +256,7 @@ namespace FamilyManager2UI.WebClient {
             using HttpClient client = new HttpClient();
             HttpResponseMessage responseMessage = await client.DeleteAsync($"{requestUrl}/families/{streetName}/{streetNumber}");
             if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             return null;
         }
     }

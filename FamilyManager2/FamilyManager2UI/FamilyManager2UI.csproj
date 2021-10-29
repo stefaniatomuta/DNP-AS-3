@@ -9,4 +9,8 @@
       <ProjectReference Include="..\FamilyManagerWebAPI\FamilyManagerWebAPI.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Remove="Data\users.json" />
+    </ItemGroup>
+
 </Project>
