@@ -11,6 +11,7 @@ namespace FamilyManager2UI.WebClient {
         public Task<T> PutAsync<T>(T item, int id);
         public Task<object> DeleteAsync<T>(int id);
         public Task<object> DeleteAsync<T>(string streetName, int streetNumber);
-        
+        public Task<IList<string>> GetColorAsync(string type);
+
     }
 }

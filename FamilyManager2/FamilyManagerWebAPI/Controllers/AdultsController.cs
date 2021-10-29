@@ -82,7 +82,7 @@ namespace FamilyManagerWebAPI.Controllers {
         
         [HttpPut]
         [Route("{id:int}")]
-        public async Task<ActionResult<Adult>> UpdateToDo([FromBody] int id, Adult adult) {
+        public async Task<ActionResult<Adult>> UpdateToDo([FromRoute] int id, Adult adult) {
             try {
                 Adult updated = await service.UpdateAdultAsync(id, adult);
                 return Ok(updated);

@@ -2,10 +2,10 @@
 @page "/Stats"
 @attribute [Authorize]
 
-@inject IFamilyData Model
+@inject IRestClient restClient;
 
 @using Models
-@using FamilyManager2UI.Data
+@using FamilyManager2UI.WebClient
 
 <div class="card mb-5">
     <h1 class="card-header mb-3">Statistics</h1>
@@ -130,8 +130,16 @@
     }
 
     protected override async Task OnInitializedAsync() {
-        families = Model.GetFamilies();
-        people = Model.GetPeople();
+         families = await restClient.GetAsync<Family>();
+         people = new List<Person>();
+        foreach (var fam in families) {
+            foreach (var person in fam.Adults) {
+                people.Add(person);
+            }
+            foreach (var child in fam.Children) {
+                people.Add(child);
+            }
+        }
 
         sex = new List<ChartData>();
         sex.Add(new ChartData() {
@@ -168,9 +176,9 @@
             Name = ">55",
             Count = people.Count(p => p.Age > 55)
         });
-
-        hairColors = new List<ChartData>();
-        foreach (var color in Model.GetHairColors()) {
+        
+        hairColors = new List<ChartData>();   
+        foreach(var color in await restClient.GetColorAsync("haircolors")) {
             hairColors.Add(new ChartData() {
                 Name = color,
                 Count = people.Count(p => p.HairColor.Equals(color))
@@ -178,7 +186,7 @@
         }
 
         eyeColors = new List<ChartData>();
-        foreach (var color in Model.GetEyeColors()) {
+        foreach (var color in await restClient.GetColorAsync("eyecolors")) {
             eyeColors.Add(new ChartData() {
                 Name = color,
                 Count = people.Count(p => p.EyeColor.Equals(color))

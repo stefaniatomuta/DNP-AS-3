@@ -42,6 +42,29 @@ namespace FamilyManager2UI.WebClient {
             return items;
         }
 
+        public async Task<IList<string>> GetColorAsync(string type) {
+            using HttpClient client = new HttpClient();
+            string url = "/data";
+            switch (type) {
+                case "eyecolors":
+                    url += "/eyecolors";
+                    break; 
+                case "haircolors":
+                    url += "/haircolors";
+                    break;
+            }
+
+            HttpResponseMessage responseMessage = await client.GetAsync($"{requestUrl}/{url}");
+            if (!responseMessage.IsSuccessStatusCode)
+                throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+            string result = await responseMessage.Content.ReadAsStringAsync();
+
+            List<string> items = JsonSerializer.Deserialize<List<string>>(result, new JsonSerializerOptions {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+            return items;
+        }
+
         public async Task<T> GetAsync<T>(int id) {
             using HttpClient client = new HttpClient();
             string url = "";
