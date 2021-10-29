@@ -9,9 +9,9 @@ namespace FamilyManagerWebAPI.Controllers {
     [ApiController]
     [Route("[controller]")]
     public class ChildrenController : ControllerBase {
-        private IChildDAO service;
+        private IDAO service;
         
-        public ChildrenController(IChildDAO service) {
+        public ChildrenController(IDAO service) {
             this.service = service;
         }
 
@@ -26,7 +26,7 @@ namespace FamilyManagerWebAPI.Controllers {
         }
 
         [HttpGet]
-        [Route("families/{streetName}/{houseNumber:int}")]
+        [Route("{streetName}/{houseNumber:int}")]
         public async Task<ActionResult<IList<Child>>> GetChildrenAsync([FromRoute] string streetName, [FromRoute] int houseNumber) {
             try {
                 IList<Child> children = await service.GetChildrenAsync(streetName, houseNumber);
@@ -50,7 +50,7 @@ namespace FamilyManagerWebAPI.Controllers {
         }
 
         [HttpPost]
-        [Route("families/{streetName}/{houseNumber:int}")]
+        [Route("{streetName}/{houseNumber:int}")]
         public async Task<ActionResult<Child>> AddChildAsync([FromRoute] string streetName, [FromRoute] int houseNumber, [FromBody] Child child) {
             try {
                 Child newChild = await service.AddChildAsync(streetName, houseNumber, child);
@@ -62,7 +62,7 @@ namespace FamilyManagerWebAPI.Controllers {
 
         [HttpPut]
         [Route("{childId:int}")]
-        public async Task<ActionResult<Child>> UpdateChildAsync([FromRoute] int childId, Child child) {
+        public async Task<ActionResult<Child>> UpdateChildAsync([FromRoute] int childId,[FromBody] Child child) {
             try {
                 Child updatedChild = await service.UpdateChildAsync(childId, child);
                 return Ok(updatedChild);

@@ -1,8 +1,9 @@
 ﻿@page "/Register"
 @using Models
 @using FamilyManager2UI.Data
+@using FamilyManager2UI.WebClient
 @inject NavigationManager NavigationManager
-@inject IUserService UserService
+@inject IRestClient restClient;
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 

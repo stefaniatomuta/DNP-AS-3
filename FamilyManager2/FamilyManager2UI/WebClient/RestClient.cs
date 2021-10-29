@@ -9,9 +9,24 @@ using Models;
 namespace FamilyManager2UI.WebClient {
     public class RestClient : IRestClient {
         private string requestUrl = "https://localhost:5002";
+        
 
+       
 
         //Get methods 
+        public async Task<T> GetAsync<T>(string username, string password) {
+            using HttpClient client = new HttpClient();
+            HttpResponseMessage responseMessage = await client.GetAsync($"{requestUrl}/User?username={username}&password={password}");
+            if (!responseMessage.IsSuccessStatusCode)
+                throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+            string result = await responseMessage.Content.ReadAsStringAsync();
+
+            T item = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+            return item;
+        }
+        
         public async Task<List<T>> GetAsync<T>() {
             using HttpClient client = new HttpClient();
             string url = "";
@@ -110,14 +125,37 @@ namespace FamilyManager2UI.WebClient {
         }
 
         //Post methods
+        
+        public async Task<T> PostAsync<T>(T user) {
+            using HttpClient client = new HttpClient();
+
+            string itemAsJson = JsonSerializer.Serialize(user);
+            StringContent content = new StringContent(
+                itemAsJson, Encoding.UTF8, "application/Json");
+            HttpResponseMessage responseMessage = await client.PostAsync($"{requestUrl}/User", content);
+            if (!responseMessage.IsSuccessStatusCode)
+                throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+            string result = await responseMessage.Content.ReadAsStringAsync();
+
+            T newItem = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+            return newItem;
+        }
+        
+        
         public async Task<T> PostAsync<T>(T item, string streetName, int streetNumber) {
             using HttpClient client = new HttpClient();
             string url = "";
             switch (typeof(T).Name) {
                 case "Child":
+                    url = $"{requestUrl}/children/{streetName}/{streetNumber}";
+                    break;
                 case "Pet":
+                    url = $"{requestUrl}/pets/{streetName}/{streetNumber}";
+                    break;
                 case "Adult":
-                    url = $"{requestUrl}/families/{streetName}/{streetNumber}";
+                    url = $"{requestUrl}/adults/{streetName}/{streetNumber}";
                     break;
                 case "Family":
                     url = "families";
@@ -144,7 +182,7 @@ namespace FamilyManager2UI.WebClient {
             StringContent content = new StringContent(
                 itemAsJson, Encoding.UTF8, "application/Json");
             HttpResponseMessage responseMessage =
-                await client.PostAsync($"{requestUrl}/families/{streetName}/{streetNumber}/children/{childId}",
+                await client.PostAsync($"{requestUrl}/pets/{streetName}/{streetNumber}/{childId}",
                     content);
             if (!responseMessage.IsSuccessStatusCode)
                 throw new Exception(@"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");

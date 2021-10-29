@@ -28,6 +28,7 @@ namespace FamilyManagerWebAPI {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "FamilyManagerWebAPI", Version = "v1"});
             });
             services.AddSingleton<IDAO, DAO>();
+            services.AddSingleton<IUserDAO, UserDAO>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

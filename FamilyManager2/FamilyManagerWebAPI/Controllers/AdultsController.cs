@@ -10,8 +10,8 @@ namespace FamilyManagerWebAPI.Controllers {
     [ApiController]
     [Route("[controller]")]
     public class AdultsController : ControllerBase {
-        private IAdultDAO service;
-        public AdultsController(IAdultDAO familyData) {
+        private IDAO service;
+        public AdultsController(IDAO familyData) {
            service = familyData;
         }
         [HttpGet]
@@ -82,7 +82,7 @@ namespace FamilyManagerWebAPI.Controllers {
         
         [HttpPut]
         [Route("{id:int}")]
-        public async Task<ActionResult<Adult>> UpdateToDo([FromRoute] int id, Adult adult) {
+        public async Task<ActionResult<Adult>> UpdateToDo([FromRoute] int id, [FromBody] Adult adult) {
             try {
                 Adult updated = await service.UpdateAdultAsync(id, adult);
                 return Ok(updated);

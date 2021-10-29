@@ -52,8 +52,12 @@ namespace FamilyManagerWebAPI.Data {
             return fam;
         }
 
-        public async Task<Family> UpdateFamilyAsync(Family family) {
-            Family fam = await GetFamilyAsync(family.StreetName, family.HouseNumber);
+        public async Task<Family> UpdateFamilyAsync(string streetName, int houseNumber, Family family) {
+            Family fam = await GetFamilyAsync(streetName, houseNumber);
+            Family fami = await GetFamilyAsync(family.StreetName, family.HouseNumber);
+            if (fami != null) {
+                throw new InvalidDataException("The place is already taken by another family");
+            }
             fam.StreetName = family.StreetName;
             fam.HouseNumber = family.HouseNumber;
             fam.Pets = family.Pets;

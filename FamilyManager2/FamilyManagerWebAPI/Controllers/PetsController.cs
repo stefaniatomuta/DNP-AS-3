@@ -16,6 +16,7 @@ namespace FamilyManagerWebAPI.Controllers {
         }
 
         [HttpGet]
+        [Route("{street}/{number:int}")]
         public async Task<ActionResult<IList<Pet>>> GetPetsAsync([FromRoute] string street, [FromRoute] int number) {
             try {
                 IList<Pet> pets = await service.GetPetsAsync(street, number);
@@ -42,8 +43,8 @@ namespace FamilyManagerWebAPI.Controllers {
         }
 
         [HttpPost]
-        [Route("families/{street}/{number:int}")]
-        public async Task<ActionResult<Pet>> AddPetAsync([FromRoute] Pet pet, [FromRoute] string street, [FromRoute] int number) {
+        [Route("{street}/{number:int}")]
+        public async Task<ActionResult<Pet>> AddPetAsync([FromBody] Pet pet, [FromRoute] string street, [FromRoute] int number) {
             try {
                 Pet newPet = await service.AddPetAsync(pet, street, number);
                 return Created($"{pet.Id}", newPet);
@@ -54,8 +55,8 @@ namespace FamilyManagerWebAPI.Controllers {
         }
 
         [HttpPost]
-        [Route("families/{street}/{number:int}/children/{childId:int}")]
-        public async Task<ActionResult<Pet>> AddPetAsync([FromRoute] Pet pet, [FromRoute] string street, [FromRoute] int number, [FromRoute] int childId) {
+        [Route("{street}/{number:int}/{childId:int}")]
+        public async Task<ActionResult<Pet>> AddPetAsync([FromBody] Pet pet, [FromRoute] string street, [FromRoute] int number, [FromRoute] int childId) {
             try {
                 Pet newPet = await service.AddPetAsync(pet, street, number, childId);
                 return Created($"{pet.Id}", newPet);
