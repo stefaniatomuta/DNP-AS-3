@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FamilyManagerWebAPI.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ namespace FamilyManagerWebAPI.Controllers {
 
         [HttpGet]
         [Route("eyecolors")]
-        public async Task<ActionResult<string>> GetEyeColorsAsync() {
+        public async Task<ActionResult<IList<string>>> GetEyeColorsAsync() {
             try {
                 return Ok(await service.GetEyeColorsAsync());
             }
@@ -28,7 +29,7 @@ namespace FamilyManagerWebAPI.Controllers {
         
         [HttpGet]
         [Route("haircolors")]
-        public async Task<ActionResult<string>> GetHairColorsAsync() {
+        public async Task<ActionResult<IList<string>>> GetHairColorsAsync() {
             try {
                 return Ok(await service.GetHairColorsAsync());
             }

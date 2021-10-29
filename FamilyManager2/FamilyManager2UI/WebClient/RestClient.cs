@@ -8,11 +8,8 @@ using Models;
 
 namespace FamilyManager2UI.WebClient {
     public class RestClient : IRestClient {
-        private string requestUrl = "https://localhost:5002";
+        private string requestUrl = "https://localhost:5003";
         
-
-       
-
         //Get methods 
         public async Task<T> GetAsync<T>(string username, string password) {
             using HttpClient client = new HttpClient();
@@ -59,7 +56,7 @@ namespace FamilyManager2UI.WebClient {
 
         public async Task<IList<string>> GetColorAsync(string type) {
             using HttpClient client = new HttpClient();
-            string url = "/data";
+            string url = "data";
             switch (type) {
                 case "eyecolors":
                     url += "/eyecolors";
