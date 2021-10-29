@@ -92,9 +92,6 @@ namespace FamilyManager2UI.WebClient {
                 case "Adult":
                     url = "adults";
                     break;
-                case "Family":
-                    url = "families";
-                    break;
             }
 
             HttpResponseMessage responseMessage = await client.GetAsync($"{requestUrl}/{url}/{id}");
@@ -115,7 +112,7 @@ namespace FamilyManager2UI.WebClient {
             if (!responseMessage.IsSuccessStatusCode)
                 throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             string result = await responseMessage.Content.ReadAsStringAsync();
-            
+
             T items = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });

@@ -13,4 +13,8 @@
       <Content Remove="Data\users.json" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Radzen.Blazor" Version="3.11.1" />
+    </ItemGroup>
+
 </Project>
