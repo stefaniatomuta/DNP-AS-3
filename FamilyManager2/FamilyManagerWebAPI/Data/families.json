@@ -1096,28 +1096,5 @@
       }
     ],
     "Pets": []
-  },
-  {
-    "StreetName": "aBC",
-    "HouseNumber": 10,
-    "Adults": [
-      {
-        "JobTitle": {
-          "JobTitle": "Joker",
-          "Salary": 10000
-        },
-        "Id": 0,
-        "FirstName": "First",
-        "LastName": "Adult",
-        "HairColor": "Black",
-        "EyeColor": "Blue",
-        "Age": 10,
-        "Weight": 105,
-        "Height": 150,
-        "Sex": "F"
-      }
-    ],
-    "Children": [],
-    "Pets": []
   }
 ]

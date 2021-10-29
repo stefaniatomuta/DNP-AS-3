@@ -1,10 +1,7 @@
 ﻿@page "/Family/{address}/{number:int}"
 @using Data;
-@using FamilyManager2UI.Data
 @using Models;
-@using System.Threading
 @using FamilyManager2UI.WebClient
-@using FamilyManagerWebAPI.Controllers
 @inject NavigationManager navigationManager;
 @inject IRestClient RestClient;
 @inherits MainLayout ;
@@ -19,7 +16,7 @@
         <li data-target="#carousel_family" data-slide-to="1" class="@secondSlide"></li>
     </ol>
     <a class="carousel-control-prev" role="button" data-slide="prev" @onclick="@(()=>Manually(false))">
-        <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: #3a0647;"/>
+        <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: #3a0647;"></span>
     </a>
     <!--carousel inner-->
     
@@ -27,9 +24,9 @@
         <!--controls - have to be fixed -->
         <!--slide 1-->
         <div class="carousel-item @firstSlide" id="family-slide">
-            <h1>@family.GetUniqueKey()
-            
-            </h1>
+            @if (family != null) {
+                <h1>@family.GetUniqueKey()</h1>
+            }
             <p>Search for a particular member: <input type="text" @oninput="@((arg) => FilterByName(arg))" style="width: 200px"/></p>
             <div class="d-flex justify-content-between mb-2">
                 <div>
@@ -43,7 +40,7 @@
                 <AuthorizeView Policy="@Policies.IsAdmin">
                     <div class="d-flex justify-content-end">
                         <button class="btn mx-auto" @onclick="@(() => RemoveFamilyAsync())">
-                            <i class="oi oi-trash" style="color:red"/>
+                            <i class="oi oi-trash" style="color:red"></i>
                         </button>
                     </div>
                 </AuthorizeView>
@@ -94,8 +91,9 @@
         </div>
         <!-- slide 2-->
         <div class="carousel-item @secondSlide" id="pet-slide">
-            <h1>@family.GetUniqueKey()'s Pets</h1>
-            
+            @if (family != null) {
+                <h1>@family.GetUniqueKey()'s Pets</h1>
+            }
             @if (filteredPets == null) {
                 <p>
                     <em> Loading ...</em>
@@ -105,7 +103,7 @@
                 <p>
                     <em>This family doesn't have pets yet</em>
                 </p>
-                <img src="/Images/birdMemeCs.png" width="500px" height="500px" /><br/>
+                <img src="Images/birdMemeCs.png" width="500px" height="500px" alt ="meme"><br/>
             }
             else {
                 <p>Search for a particular pet: <input type="text" @oninput="@((arg) => FilterByPetName(arg))" style="width: 200px"/></p>
@@ -143,7 +141,7 @@
 
     </div>
     <a class="carousel-control-next" role="button" data-slide="next" @onclick="@(()=>Manually(true))">
-        <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: #3a0647"/>
+        <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: #3a0647"></span>
     </a>
 </div>
 
