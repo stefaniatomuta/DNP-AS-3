@@ -133,6 +133,27 @@ namespace FamilyManagerWebAPI.Data {
             }
             return adults;
         }
+        
+        public async Task<IList<Person>> GetPeopleAsync() {
+            IList<Person> people = new List<Person>();
+            foreach (Family family in file.Families) {
+                foreach (Adult adult in family.Adults) {
+                    people.Add(adult);
+                }
+
+                foreach (Child child in family.Children) {
+                    people.Add(child);
+                }
+            }
+            return people;
+        }
+
+        public async Task<Person> GetPersonAsync(int id) {
+            Person person = (await GetPeopleAsync()).FirstOrDefault(p => p.Id == id);
+            if (person == null)
+                throw new NullReferenceException("No such person found");
+            return person;
+        }
 
         public async Task<IList<Child>> GetChildrenAsync() {
             IList<Child> children = new List<Child>();
@@ -241,5 +262,6 @@ namespace FamilyManagerWebAPI.Data {
             }
             file.SaveDataToFile();
         }
+        
     }
 }
