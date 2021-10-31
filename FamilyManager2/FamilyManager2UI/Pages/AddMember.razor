@@ -174,6 +174,7 @@
     public string type { get; set; }
 
     private Family family = new Family();
+
     private Person person = new Person();
     private Pet pet = new Pet();
     private Job job = new Job();
@@ -190,7 +191,7 @@
     }
 
     private async Task AddPetAsync() {
-        if (!person.FirstName.Equals("None"))
+        if (person.FirstName != null && !person.FirstName.Equals("None"))
             await RestClient.PostAsync(pet, family.StreetName, family.HouseNumber, family.Children.First(c => c.FirstName.Equals(person.FirstName)).Id);
         else
             await RestClient.PostAsync(pet, family.StreetName, family.HouseNumber);
