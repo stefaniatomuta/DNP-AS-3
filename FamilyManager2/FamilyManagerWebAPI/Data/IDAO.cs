@@ -13,7 +13,6 @@ namespace FamilyManagerWebAPI.Data {
         Task<Pet> UpdatePetAsync(int id, Pet pet);
         Task RemovePetAsync(int id);
         Task<IList<Person>> GetPeopleAsync();
-        Task<Person> GetPersonAsync(int id);
-
+        Task<Person> GetPersonAsync(int id, string firstName, string lastName);
     }
 }

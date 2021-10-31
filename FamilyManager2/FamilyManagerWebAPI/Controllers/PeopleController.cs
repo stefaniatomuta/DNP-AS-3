@@ -29,9 +29,10 @@ namespace FamilyManagerWebAPI.Controllers {
         
         [HttpGet]
         [Route("{id:int}")]
-        public async Task<ActionResult<Person>> GetPersonAsync([FromRoute] int id) {
+        public async Task<ActionResult<Person>> GetPersonAsync([FromRoute] int id, [FromQuery] string? firstName, [FromQuery] string? lastName) {
+            if (firstName == null || lastName == null) return BadRequest("Please enter a first- and last name");
             try {
-                Person person = await service.GetPersonAsync(id);
+                Person person = await service.GetPersonAsync(id, firstName, lastName);
                 return Ok(person);
             }
             catch (NullReferenceException e) {

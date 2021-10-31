@@ -77,7 +77,7 @@
     private Person person;
 
     protected override async Task OnInitializedAsync() {
-        person = await restClient.GetAsync<Person>(Id);
+        person = await restClient.GetPerson(Id, Firstname, Lastname);
         FirstLastName = $"{Firstname} {Lastname}";
     }
     

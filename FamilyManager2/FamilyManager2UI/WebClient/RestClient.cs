@@ -81,6 +81,23 @@ namespace FamilyManager2UI.WebClient {
             
             return colors;
         }
+        
+        public async Task<Person> GetPerson(int id, string firstName, string lastName) {
+            using HttpClient client = new HttpClient();
+            HttpResponseMessage responseMessage = await client.GetAsync($"{requestUrl}/people/{id}?firstName={firstName}&lastName={lastName}");
+            string result = await responseMessage.Content.ReadAsStringAsync();
+            if (!responseMessage.IsSuccessStatusCode) throw new Exception(result);
+
+            if (result.ToLower().Contains("interests") && result.ToLower().Contains("pets")) {
+                return JsonSerializer.Deserialize<Child>(result, new JsonSerializerOptions {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
+            }
+
+            return JsonSerializer.Deserialize<Adult>(result, new JsonSerializerOptions {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+        }
 
         public async Task<T> GetAsync<T>(int id) {
             using HttpClient client = new HttpClient();
@@ -94,9 +111,6 @@ namespace FamilyManager2UI.WebClient {
                     break;
                 case "Adult":
                     url = "adults";
-                    break;
-                case "Person":
-                    url = "people";
                     break;
             }
 

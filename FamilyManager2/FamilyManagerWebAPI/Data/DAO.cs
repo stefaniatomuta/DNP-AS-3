@@ -148,8 +148,8 @@ namespace FamilyManagerWebAPI.Data {
             return people;
         }
 
-        public async Task<Person> GetPersonAsync(int id) {
-            Person person = (await GetPeopleAsync()).FirstOrDefault(p => p.Id == id);
+        public async Task<Person> GetPersonAsync(int id, string firstName, string lastName) {
+            Person person = (await GetPeopleAsync()).FirstOrDefault(p => p.Id == id && p.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) && p.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase));
             if (person == null)
                 throw new NullReferenceException("No such person found");
             return person;

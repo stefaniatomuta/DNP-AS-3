@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Models;
 
 namespace FamilyManager2UI.WebClient {
     public interface IRestClient {
@@ -14,6 +15,6 @@ namespace FamilyManager2UI.WebClient {
         public Task<object> DeleteAsync<T>(int id);
         public Task<object> DeleteAsync<T>(string streetName, int streetNumber);
         public Task<IList<string>> GetColorAsync(string type);
-
+        public Task<Person> GetPerson(int id, string firstName, string lastName);
     }
 }
