@@ -134,7 +134,7 @@ namespace FamilyManager2UI.WebClient {
             string result = await responseMessage.Content.ReadAsStringAsync();
             if (!responseMessage.IsSuccessStatusCode)
                 throw new Exception(result);
-
+            
             T items = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
@@ -162,7 +162,9 @@ namespace FamilyManager2UI.WebClient {
         }
         
         
-        public async Task<T> PostAsync<T>(T item, string streetName, int streetNumber) {
+        public async Task<T> PostAsync<T>(T item, string? streetName, int? streetNumber) {
+            if (streetName == null || streetName.Equals("") || streetNumber == null)
+                throw new Exception("Please input correct data");
             using HttpClient client = new HttpClient();
             string url = "";
             switch (typeof(T).Name) {
@@ -195,7 +197,9 @@ namespace FamilyManager2UI.WebClient {
             return newItem;
         }
 
-        public async Task<T> PostAsync<T>(T item, string streetName, int streetNumber, int childId) {
+        public async Task<T> PostAsync<T>(T item, string? streetName, int? streetNumber, int childId) {
+            if (streetName == null || streetName.Equals("") || streetNumber == null)
+                throw new Exception("Please input correct data");
             using HttpClient client = new HttpClient();
             string itemAsJson = JsonSerializer.Serialize(item);
             StringContent content = new StringContent(
@@ -286,5 +290,6 @@ namespace FamilyManager2UI.WebClient {
 
             return null;
         }
+         
     }
 }

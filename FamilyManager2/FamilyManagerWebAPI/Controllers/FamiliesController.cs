@@ -27,7 +27,7 @@ namespace FamilyManagerWebAPI.Controllers {
             catch (Exception e) {
                 return StatusCode(500, e.Message);
             }
-        }
+        }                                                              
 
         [HttpGet]
         [Route("{streetName}/{houseNumber:int}")]

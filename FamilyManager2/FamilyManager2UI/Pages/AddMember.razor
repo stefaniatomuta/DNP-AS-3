@@ -2,6 +2,7 @@
 @using Data;
 @using FamilyManager2UI.WebClient
 @using Models
+@using System.ComponentModel.DataAnnotations
 @inject NavigationManager NavMng;
 @inject IRestClient RestClient;
 <div class="text-center">
@@ -157,6 +158,7 @@
                     <button class="btn btn-outline-dark" type="submit">Add Person</button>
                 </p>
             </div>
+            <label style="color: red">@error</label>
         </div>
         </div>
     </EditForm>
@@ -182,7 +184,8 @@
     private string hairColor;
     private string eyeColor;
     private string sex;
-
+    private static string error = "";
+    
     protected override async Task OnInitializedAsync() {
         family = await RestClient.GetAsync<Family>(streetName, houseNumber);
         person.HairColor = "Black";
@@ -198,42 +201,59 @@
         NavMng.NavigateTo("/AddFamilyMember");
     }
 
+    private bool ValidateData(Person person) {
+        if (person.FirstName == null|| person.LastName == null||
+            person.Age == 0 || person.Height == 0 || person.Weight == 0 || job.Salary == 0 || job.JobTitle == null ||
+            pet.Age == 0 || pet.Name == null || pet.Species == null || interest.Description == null || interest.Type == null) {
+            error = "Please input correct data";
+            return false;
+        }
+        return true;
+    }
+
     private async Task AddPersonAsync() {
-        if (type.Equals("Adult")) {
-            await RestClient.PostAsync(new Adult() {
-                FirstName = person.FirstName,
-                LastName = person.LastName,
-                EyeColor = person.EyeColor,
-                HairColor = person.HairColor,
-                Age = person.Age,
-                Height = person.Height,
-                Weight = person.Weight,
-                Sex = person.Sex,
-                JobTitle = new Job() {
-                    JobTitle = job.JobTitle,
-                    Salary = job.Salary
+        if (ValidateData(person)) {
+            try {
+                if (type.Equals("Adult")) {
+                    await RestClient.PostAsync(new Adult() {
+                        FirstName = person.FirstName,
+                        LastName = person.LastName,
+                        EyeColor = person.EyeColor,
+                        HairColor = person.HairColor,
+                        Age = person.Age,
+                        Height = person.Height,
+                        Weight = person.Weight,
+                        Sex = person.Sex,
+                        JobTitle = new Job() {
+                            JobTitle = job.JobTitle,
+                            Salary = job.Salary
+                        }
+                    }, family.StreetName, family.HouseNumber);
                 }
-            }, family.StreetName,family.HouseNumber);
-        }
-        else {
-            await RestClient.PostAsync(new Child() {
-                FirstName = person.FirstName,
-                LastName = person.LastName,
-                EyeColor = person.EyeColor,
-                HairColor = person.HairColor,
-                Age = person.Age,
-                Height = person.Height,
-                Weight = person.Weight,
-                Sex = person.Sex,
-                Pets = new List<Pet>(),
-                Interests = new List<Interest>() {
-                    new Interest() {
-                        Description = interest.Description,
-                        Type = interest.Type
-                    }
+                else {
+                    await RestClient.PostAsync(new Child() {
+                        FirstName = person.FirstName,
+                        LastName = person.LastName,
+                        EyeColor = person.EyeColor,
+                        HairColor = person.HairColor,
+                        Age = person.Age,
+                        Height = person.Height,
+                        Weight = person.Weight,
+                        Sex = person.Sex,
+                        Pets = new List<Pet>(),
+                        Interests = new List<Interest>() {
+                            new Interest() {
+                                Description = interest.Description,
+                                Type = interest.Type
+                            }
+                        }
+                    }, family.StreetName, family.HouseNumber);
                 }
-            }, family.StreetName,family.HouseNumber);
+            }
+            catch (Exception e) {
+                error = e.Message;
+            }
+            NavMng.NavigateTo("/AddFamilyMember");
         }
-        NavMng.NavigateTo("/AddFamilyMember");
     }
 }            

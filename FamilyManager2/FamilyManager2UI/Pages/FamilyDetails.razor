@@ -1,9 +1,9 @@
-﻿@page "/Family/{address}/{number:int}"
+﻿@page  "/Family/{Address}/{Number:int}"
 @using Data;
 @using Models;
 @using FamilyManager2UI.WebClient
 @inject NavigationManager navigationManager;
-@inject IRestClient RestClient;
+@inject IRestClient restClient;
 @inherits MainLayout ;
 <!-- role, name, age, pets if any, id, age, sex -->
 
@@ -170,10 +170,9 @@
     int currentSlide = 0;
 
     protected override async Task OnInitializedAsync() {
-        family = await RestClient.GetAsync<Family>(Address,Number);
+        family = await restClient.GetAsync<Family>(Address,Number);
         familyMembers = family.GetAllMembers();
         filteredFamilyMembers = familyMembers;
-
         pets = family.Pets;
         filteredPets = pets;
     }
@@ -296,7 +295,7 @@
     }
     
     private async Task RemoveFamilyAsync() {
-        await RestClient.DeleteAsync<Family>(Address,Number);
+        await restClient.DeleteAsync<Family>(Address,Number);
         navigationManager.NavigateTo("/FamilyList");
     }
 
