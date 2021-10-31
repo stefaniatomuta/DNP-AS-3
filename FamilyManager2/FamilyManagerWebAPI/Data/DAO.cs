@@ -192,20 +192,20 @@ namespace FamilyManagerWebAPI.Data {
             return child;
         }
 
-        public async Task<Child> UpdateChildAsync(int childId, Child updatedChild) {
-            Child child = await GetChildAsync(childId);
-            child.Age = updatedChild.Age;
-            child.Height = updatedChild.Height;
-            child.Sex = updatedChild.Sex;
-            child.Weight = updatedChild.Weight;
-            child.EyeColor = updatedChild.EyeColor;
-            child.FirstName = updatedChild.FirstName;
-            child.HairColor = updatedChild.HairColor;
-            child.LastName = updatedChild.LastName;
-            child.Interests = updatedChild.Interests;
-            child.Pets = child.Pets;
+        public async Task<Child> UpdateChildAsync(int childId, Child child) {
+            Child updated = await GetChildAsync(childId);
+            updated.Age = child.Age;
+            updated.Height = child.Height;
+            updated.Sex = child.Sex;
+            updated.Weight = child.Weight;
+            updated.EyeColor = child.EyeColor;
+            updated.FirstName = child.FirstName;
+            updated.HairColor = child.HairColor;
+            updated.LastName = child.LastName;
+            updated.Interests = child.Interests;
+            updated.Pets = child.Pets;
             file.SaveDataToFile();
-            return child;
+            return updated;
         }
 
         public async Task DeleteChildAsync(int childId) {

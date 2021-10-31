@@ -33,13 +33,6 @@ namespace FamilyManagerWebAPI.Data {
             }
         }
 
-        public void SaveDataToFile() {
-            string familiesAsJson = JsonSerializer.Serialize(Families, new JsonSerializerOptions() {
-                WriteIndented = true
-            });
-            File.WriteAllText(filePath, familiesAsJson);
-        }
-
         private void Seed() {
             Family[] f = {
                 new Family() {
@@ -84,6 +77,13 @@ namespace FamilyManagerWebAPI.Data {
                 }
             };
             Families = f.ToList();
+        }
+
+        public void SaveDataToFile() {
+            string familiesAsJson = JsonSerializer.Serialize(Families, new JsonSerializerOptions() {
+                WriteIndented = true
+            });
+            File.WriteAllText(filePath, familiesAsJson);
         }
     }
 }

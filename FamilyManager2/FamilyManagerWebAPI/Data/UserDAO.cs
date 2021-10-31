@@ -13,7 +13,7 @@ namespace FamilyManagerWebAPI.Data {
         }
 
         public async Task<User> GetUserAsync(string username, string password) {
-            User user = fileContext.users.FirstOrDefault(
+            User user = fileContext.Users.FirstOrDefault(
                 u => u.Username.Equals(username) && u.Password.Equals(password));
             if (user == null)
                 throw new NullReferenceException("No user found");
@@ -21,10 +21,10 @@ namespace FamilyManagerWebAPI.Data {
         }
 
         public async Task<User> AddUserAsync(User user) {
-            User first = fileContext.users.FirstOrDefault(u => u.Username.Equals(user.Username, StringComparison.CurrentCultureIgnoreCase));
+            User first = fileContext.Users.FirstOrDefault(u => u.Username.Equals(user.Username, StringComparison.CurrentCultureIgnoreCase));
             if (first!=null && first.Equals(user))
                 throw new Exception("User already exists");
-            fileContext.users.Add(user);
+            fileContext.Users.Add(user);
             fileContext.WriteUsersToFile();
             return first;
         }

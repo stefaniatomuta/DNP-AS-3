@@ -5,23 +5,23 @@ using Models;
 
 namespace FamilyManagerWebAPI.Data {
     public class UserFileContext {
-        private string UsersFile = "Data/users.json";
-        public List<User> users { get; set; }
+        private const string usersFile = "Data/users.json";
+        public IList<User> Users { get; private set; }
         
         public UserFileContext() {
-            if (!File.Exists(UsersFile)) {
-                seed();
+            if (!File.Exists(usersFile)) {
+                Seed();
                 WriteUsersToFile();
             }
             else {
-                string content = File.ReadAllText(UsersFile);
-                users = JsonSerializer.Deserialize<List<User>>(content);
+                string content = File.ReadAllText(usersFile);
+                Users = JsonSerializer.Deserialize<List<User>>(content);
             }
         }
 
-        private void seed() {
-            users = new List<User>();
-            users.Add(new User() {
+        private void Seed() {
+            Users = new List<User>();
+            Users.Add(new User() {
                 Username = "Adriana",
                 Password = "1234",
                 Role = Role.Admin
@@ -29,12 +29,10 @@ namespace FamilyManagerWebAPI.Data {
         }
         
         public void WriteUsersToFile() {
-            string usersAsJson = JsonSerializer.Serialize(users, new JsonSerializerOptions() {
+            string usersAsJson = JsonSerializer.Serialize(Users, new JsonSerializerOptions() {
                 WriteIndented = true
             });
-            File.WriteAllText(UsersFile, usersAsJson);
+            File.WriteAllText(usersFile, usersAsJson);
         }
-        
-        
     }
 }

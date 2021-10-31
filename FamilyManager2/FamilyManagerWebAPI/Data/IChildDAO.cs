@@ -8,7 +8,7 @@ namespace FamilyManagerWebAPI.Data {
         Task<IList<Child>> GetChildrenAsync(string streetName, int houseNumber);
         Task<Child> GetChildAsync(int childId);
         Task<Child> AddChildAsync(string streetName, int houseNumber, Child child);
-        Task<Child> UpdateChildAsync(int childId, Child updatedChild);
+        Task<Child> UpdateChildAsync(int childId, Child child);
         Task DeleteChildAsync(int childId);
     }
 }

@@ -10,6 +10,5 @@ namespace FamilyManagerWebAPI.Data {
         Task<Adult> AddAdultAsync(string streetName, int houseNumber, Adult adult);
         Task<Adult> UpdateAdultAsync(int id, Adult adult);
         Task DeleteAdultAsync(int id);
-
     }
 }

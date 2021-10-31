@@ -17,7 +17,7 @@ namespace FamilyManagerWebAPI.Controllers {
         }
         
         [HttpGet]
-        public async Task<ActionResult<Person>> GetPeopleAsync() {
+        public async Task<ActionResult<IList<Person>>> GetPeopleAsync() {
             try {
                 IList<Person> people = await service.GetPeopleAsync();
                 return Ok(people);

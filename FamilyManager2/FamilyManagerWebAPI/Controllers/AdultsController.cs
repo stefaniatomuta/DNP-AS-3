@@ -15,7 +15,7 @@ namespace FamilyManagerWebAPI.Controllers {
            service = familyData;
         }
         [HttpGet]
-        public async Task<ActionResult<Adult>> GetAdultsAsync() {
+        public async Task<ActionResult<IList<Adult>>> GetAdultsAsync() {
             try {
                 IList<Adult> adults = await service.GetAdultsAsync();
                 return Ok(adults);
@@ -42,7 +42,7 @@ namespace FamilyManagerWebAPI.Controllers {
         
         [HttpGet]
         [Route("{streetName}/{houseNumber:int}")]
-        public async Task<ActionResult<Adult>> GetAdultsByFamily([FromRoute] string streetName, [FromRoute] int houseNumber) {
+        public async Task<ActionResult<IList<Adult>>> GetAdultsByFamily([FromRoute] string streetName, [FromRoute] int houseNumber) {
             try {
                 IList<Adult> adult1 = await service.GetAdultsByFamilyAsync(streetName, houseNumber);
                 return Ok(adult1);
@@ -82,7 +82,7 @@ namespace FamilyManagerWebAPI.Controllers {
         
         [HttpPut]
         [Route("{id:int}")]
-        public async Task<ActionResult<Adult>> UpdateToDo([FromRoute] int id, [FromBody] Adult adult) {
+        public async Task<ActionResult<Adult>> UpdateAdult([FromRoute] int id, [FromBody] Adult adult) {
             try {
                 Adult updated = await service.UpdateAdultAsync(id, adult);
                 return Ok(updated);

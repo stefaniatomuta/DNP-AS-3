@@ -16,12 +16,12 @@ namespace FamilyManagerWebAPI.Controllers {
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetUserAsync([FromQuery] string? username, [FromQuery] string? password) {
+        public async Task<ActionResult<User>> GetUserAsync([FromQuery] string? username, [FromQuery] string? password) {
             try {
                 if (username == null || password == null)
                     return BadRequest("No user found");
-                User users = await UserDao.GetUserAsync(username, password);
-                return Ok(users);
+                User user = await UserDao.GetUserAsync(username, password);
+                return Ok(user);
             }
             catch (NullReferenceException e) {
                 return NotFound(e.Message);
@@ -33,7 +33,7 @@ namespace FamilyManagerWebAPI.Controllers {
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> PostUserAsync([FromBody] User user) {
+        public async Task<ActionResult<User>> AddUserAsync([FromBody] User user) {
             try {
                 User newUser = await UserDao.AddUserAsync(user);
                 return Created($"/{newUser.Username}", newUser);
