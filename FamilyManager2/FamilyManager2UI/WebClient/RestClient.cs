@@ -14,9 +14,10 @@ namespace FamilyManager2UI.WebClient {
         public async Task<T> GetAsync<T>(string username, string password) {
             using HttpClient client = new HttpClient();
             HttpResponseMessage responseMessage = await client.GetAsync($"{requestUrl}/User?username={username}&password={password}");
-            if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             string result = await responseMessage.Content.ReadAsStringAsync();
+            
+            if (!responseMessage.IsSuccessStatusCode)
+                throw new Exception(result);
 
             T item = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -43,9 +44,10 @@ namespace FamilyManager2UI.WebClient {
             }
 
             HttpResponseMessage responseMessage = await client.GetAsync($"{requestUrl}/{url}");
-            if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+            
             string result = await responseMessage.Content.ReadAsStringAsync();
+            if (!responseMessage.IsSuccessStatusCode)
+                throw new Exception(result);
 
             List<T> items = JsonSerializer.Deserialize<List<T>>(result, new JsonSerializerOptions {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -67,9 +69,10 @@ namespace FamilyManager2UI.WebClient {
             }
 
             HttpResponseMessage responseMessage = await client.GetAsync($"{requestUrl}/{url}");
-            if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             string result = await responseMessage.Content.ReadAsStringAsync();
+            
+            if (!responseMessage.IsSuccessStatusCode)
+                throw new Exception(result);
 
             result = result.Replace("[", "");
             result = result.Replace("]", "");
@@ -92,12 +95,16 @@ namespace FamilyManager2UI.WebClient {
                 case "Adult":
                     url = "adults";
                     break;
+                case "Person":
+                    url = "people";
+                    break;
             }
 
             HttpResponseMessage responseMessage = await client.GetAsync($"{requestUrl}/{url}/{id}");
-            if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+            
             string result = await responseMessage.Content.ReadAsStringAsync();
+            if (!responseMessage.IsSuccessStatusCode)
+                throw new Exception(result);
 
             T item = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -109,9 +116,10 @@ namespace FamilyManager2UI.WebClient {
             using HttpClient client = new HttpClient();
             HttpResponseMessage responseMessage =
                 await client.GetAsync($"{requestUrl}/families/{streetName}/{streetNumber}");
-            if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+            
             string result = await responseMessage.Content.ReadAsStringAsync();
+            if (!responseMessage.IsSuccessStatusCode)
+                throw new Exception(result);
 
             T items = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -128,9 +136,10 @@ namespace FamilyManager2UI.WebClient {
             StringContent content = new StringContent(
                 itemAsJson, Encoding.UTF8, "application/Json");
             HttpResponseMessage responseMessage = await client.PostAsync($"{requestUrl}/User", content);
-            if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
             string result = await responseMessage.Content.ReadAsStringAsync();
+            
+            if (!responseMessage.IsSuccessStatusCode)
+                throw new Exception(result);
 
             T newItem = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -161,9 +170,10 @@ namespace FamilyManager2UI.WebClient {
             StringContent content = new StringContent(
                 itemAsJson, Encoding.UTF8, "application/Json");
             HttpResponseMessage responseMessage = await client.PostAsync($"{url}", content);
-            if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+            
             string result = await responseMessage.Content.ReadAsStringAsync();
+            if (!responseMessage.IsSuccessStatusCode)
+                throw new Exception(result);
 
             T newItem = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -179,9 +189,10 @@ namespace FamilyManager2UI.WebClient {
             HttpResponseMessage responseMessage =
                 await client.PostAsync($"{requestUrl}/pets/{streetName}/{streetNumber}/{childId}",
                     content);
-            if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+            
             string result = await responseMessage.Content.ReadAsStringAsync();
+            if (!responseMessage.IsSuccessStatusCode)
+                throw new Exception(result);
 
             T newItem = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -212,10 +223,10 @@ namespace FamilyManager2UI.WebClient {
             StringContent content = new StringContent(
                 itemAsJson, Encoding.UTF8, "application/Json");
             HttpResponseMessage responseMessage = await client.PutAsync($"{requestUrl}/{url}", content);
-            ;
-            if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+            
             string result = await responseMessage.Content.ReadAsStringAsync();
+            if (!responseMessage.IsSuccessStatusCode)
+                throw new Exception(result);
 
             T newItem = JsonSerializer.Deserialize<T>(result, new JsonSerializerOptions {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -243,17 +254,22 @@ namespace FamilyManager2UI.WebClient {
             }
 
             HttpResponseMessage responseMessage = await client.DeleteAsync($"{requestUrl}/{url}");
-            ;
-            if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+            if (!responseMessage.IsSuccessStatusCode) {
+                string error = await responseMessage.Content.ReadAsStringAsync();
+                throw new Exception(error);
+            }
+
             return null;
         }
 
         public async Task<object> DeleteAsync<T>(string streetName, int streetNumber) {
             using HttpClient client = new HttpClient();
             HttpResponseMessage responseMessage = await client.DeleteAsync($"{requestUrl}/families/{streetName}/{streetNumber}");
-            if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception($"Error: {responseMessage.StatusCode}, {responseMessage.ReasonPhrase}");
+            if (!responseMessage.IsSuccessStatusCode) {
+                string error = await responseMessage.Content.ReadAsStringAsync();
+                throw new Exception(error);
+            }
+
             return null;
         }
     }
