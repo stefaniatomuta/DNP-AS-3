@@ -29,7 +29,7 @@ namespace FamilyManagerWebAPI.Controllers {
 
         [HttpGet]
         [Route("{id:int}")]
-        public async Task<ActionResult<Pet>> getPetAsync([FromRoute] int id) {
+        public async Task<ActionResult<Pet>> GetPetAsync([FromRoute] int id) {
             try {
                 Pet pet = await service.GetPetAsync(id);
                 return Ok(pet);
