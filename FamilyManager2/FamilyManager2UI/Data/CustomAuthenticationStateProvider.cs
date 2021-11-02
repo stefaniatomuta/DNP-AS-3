@@ -13,12 +13,12 @@ using Models;
 namespace FamilyManager2UI.Data {
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider {
         private readonly IJSRuntime jsRuntime;
-        private readonly IRestClient RestClient;
+        private readonly IRestClient restClient;
         private User cachedUser;
 
         public CustomAuthenticationStateProvider(IJSRuntime jsRuntime, IRestClient restClient) {
             this.jsRuntime = jsRuntime;
-            this.RestClient = restClient;
+            this.restClient = restClient;
         }
         
         public override async Task<AuthenticationState> GetAuthenticationStateAsync() {
@@ -43,7 +43,7 @@ namespace FamilyManager2UI.Data {
 
             ClaimsIdentity identity = new ClaimsIdentity();
             try {
-                User user = await RestClient.GetAsync<User>(username, password);
+                User user = await restClient.GetAsync<User>(username, password);
                 identity = SetupClaimsForUser(user);
                 string serializedData = JsonSerializer.Serialize(user);
                 jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serializedData);
@@ -69,7 +69,7 @@ namespace FamilyManager2UI.Data {
                 Role = Role.User
             };
 
-            await RestClient.PostAsync(user);
+            await restClient.PostAsync(user);
         }
 
         public void Logout() {
