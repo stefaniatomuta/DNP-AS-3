@@ -139,6 +139,8 @@
 
     protected override async Task OnInitializedAsync() {
         families = await restClient.GetAsync<Family>();
+
+        Console.WriteLine(families.Count);
         people = new List<Person>();
         foreach (var fam in families) {
             foreach (var person in fam.Adults) {
