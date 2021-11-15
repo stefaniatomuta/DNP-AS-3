@@ -147,7 +147,10 @@ namespace FamilyManagerWebAPI.Data {
         }
 
         public async Task<Person> GetPersonAsync(int id, string firstName, string lastName) {
-            Person person = (await GetPeopleAsync()).FirstOrDefault(p => p.Id == id && p.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) && p.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase));
+            Person person = (await GetPeopleAsync()).FirstOrDefault
+                (p => p.Id == id 
+                && p.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) 
+                && p.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase));
             if (person == null)
                 throw new NullReferenceException("No such person found");
             return person;
@@ -155,8 +158,10 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<IList<Child>> GetChildrenAsync() {
             await using FamilyContext familyContext = new FamilyContext();
-            IList<Child> children = familyContext.Families.SelectMany(f => f.Children).ToList();
-            return children;
+            return await familyContext.Families.SelectMany(f => f.Children)
+                .Include(c=>c.Interests)
+                .Include(c=>c.Pets)
+                .ToListAsync();
         }
 
         public async Task<IList<Child>> GetChildrenAsync(string streetName, int houseNumber) {
@@ -221,7 +226,8 @@ namespace FamilyManagerWebAPI.Data {
         public async Task<Pet> AddPetAsync(Pet pet, string street, int number, int childId) {
             await using FamilyContext familyContext = new FamilyContext();
             pet.Id = 0;
-            familyContext.Families.First(f => f.StreetName.Equals(street) && f.HouseNumber == number).Children.First(c => c.Id == childId).Pets.Add(pet);
+            familyContext.Families.First(f => f.StreetName.Equals(street) && f.HouseNumber == number)
+                .Children.First(c => c.Id == childId).Pets.Add(pet);
             await familyContext.SaveChangesAsync();
             return pet;
         }
