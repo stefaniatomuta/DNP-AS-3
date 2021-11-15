@@ -79,16 +79,25 @@ namespace FamilyManagerWebAPI.Data {
         }
 
         public async Task<Adult> AddAdultAsync(string streetName, int houseNumber, Adult adult) {
-            Family fam = await GetFamilyAsync(streetName, houseNumber);
-            using FamilyContext familyContext = new FamilyContext();
-            if (fam.Adults.Count < 2) {
-                adult.Id = 0;
-                await familyContext.AddAsync(adult);
-                await familyContext.SaveChangesAsync();
-                return adult;
+            try {
+                Family fam = await GetFamilyAsync(streetName, houseNumber);
+                using FamilyContext familyContext = new FamilyContext();
+                if (fam.Adults.Count < 2) {
+                    adult.Id = 0;
+                    fam.Adults.Add(adult);
+                    await familyContext.AddAsync(adult);
+                    familyContext.Update(fam);
+                    await familyContext.SaveChangesAsync();
+                    return adult;
+                }
+
+                throw new Exception("Max 2 adults per family");
             }
-            throw new Exception("Max 2 adults per family");
-            
+            catch (Exception e) {
+                Console.WriteLine(e.Message);
+            }
+
+            return null;
         }
 
         public async Task<IList<Adult>> GetAdultsByFamilyAsync(string streetName, int houseNumber) {
@@ -182,18 +191,11 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<Child> AddChildAsync(string streetName, int houseNumber, Child child) {
             await using FamilyContext familyContext = new FamilyContext();
-            Family family =
-                familyContext.Families.FirstOrDefault(f =>
-                    f.StreetName.Equals(streetName) && f.HouseNumber == houseNumber);
-            if (family == null) throw new NullReferenceException("No such child found");
-            int current;
-            IList<Child> children = await GetChildrenAsync();
-            if (children.Count == 0)
-                current = 0;
-            else
-                current = (children.Max(c => c.Id));
-            child.Id = current + 1;
+            Family family = await GetFamilyAsync(streetName, houseNumber);
+            child.Id = 0;
             family.Children.Add(child);
+            familyContext.Add(child);
+            familyContext.Update(family);
             await familyContext.SaveChangesAsync();
             return child;
         }
@@ -224,34 +226,28 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<Pet> GetPetAsync(int petId) {
             await using FamilyContext familyContext = new FamilyContext();
-            return familyContext.Families.SelectMany(f => f.Pets).First(p => petId == p.Id);
+            return (await GetFamiliesAsync()).SelectMany(f=>f.Pets).FirstOrDefault(p => p.Id == petId);
         }
 
         public async Task<IList<Pet>> GetPetsAsync(string street, int number) {
             await using FamilyContext familyContext = new FamilyContext();
-            return familyContext.Families
-                .FirstOrDefault(f => f.StreetName.Equals(street) && f.HouseNumber.Equals(number))?.Pets;
+            return (await GetFamilyAsync(street,number)).Pets;
         }
 
         public async Task<Pet> AddPetAsync(Pet pet, string street, int number) {
             await using FamilyContext familyContext = new FamilyContext();
-            var current = !familyContext.Families.SelectMany(f => f.Pets).Any()
-                ? 0
-                : familyContext.Families.SelectMany(f => f.Pets).Max(p => p.Id);
-            pet.Id = current + 1;
-            familyContext.Families.First(f => f.StreetName.Equals(street) && f.HouseNumber == number).Pets.Add(pet);
+            pet.Id = 0;
+            (await GetFamilyAsync(street, number)).Pets.Add(pet);
+            familyContext.Update(await GetFamilyAsync(street, number));
             await familyContext.SaveChangesAsync();
             return pet;
         }
 
         public async Task<Pet> AddPetAsync(Pet pet, string street, int number, int childId) {
             await using FamilyContext familyContext = new FamilyContext();
-            var current = !familyContext.Families.SelectMany(f => f.Pets).Any()
-                ? 0
-                : familyContext.Families.SelectMany(f => f.Pets).Max(p => p.Id);
-            pet.Id = current + 1;
-            familyContext.Families.First(f => f.StreetName.Equals(street) && f.HouseNumber == number).Children
-                .First(c => c.Id == childId).Pets.Add(pet);
+            pet.Id = 0;
+            (await GetFamilyAsync(street, number)).Children.FirstOrDefault(c => c.Id == childId)?.Pets.Add(pet);
+            familyContext.Update(await GetFamilyAsync(street, number));
             await familyContext.SaveChangesAsync();
             return pet;
         }

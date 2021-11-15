@@ -8,8 +8,6 @@ namespace Models
     {
         [MaxLength(128)]
         public string JobTitle { get; set; }
-        
-        [MaxLength(256)]
         public int Salary { get; set; }
     }
 }

@@ -1,14 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text.Json.Serialization;
 
 namespace Models {
 public class Family {
     [Required, MaxLength(256)]
     public string StreetName { get; set; }
     
-    [Required, MaxLength(32)]
+    [Required, Range(0, Int32.MaxValue)]
     public int HouseNumber{ get; set; }
     
     public List<Adult> Adults { get; set; }

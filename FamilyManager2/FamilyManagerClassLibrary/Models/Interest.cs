@@ -11,6 +11,7 @@ public class Interest {
     [MaxLength(256)]
     public string Description { get; set; }
 
+    [JsonIgnore]
     public List<Child> Children { get; set; }
 }
 }
