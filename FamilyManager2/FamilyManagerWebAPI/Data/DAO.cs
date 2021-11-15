@@ -113,7 +113,7 @@ namespace FamilyManagerWebAPI.Data {
             adult.FirstName = a.FirstName;
             adult.LastName = a.LastName;
             adult.HairColor = a.HairColor;
-            adult.JobTitle = a.JobTitle;
+            adult.Job = a.Job;
             adult.Age = a.Age;
             adult.Height = a.Height;
             adult.Weight = a.Weight;
