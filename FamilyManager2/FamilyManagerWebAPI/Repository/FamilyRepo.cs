@@ -4,7 +4,7 @@ using FamilyManagerWebAPI.Data;
 using Models;
 
 namespace FamilyManagerWebAPI.Repository {
-    public class FamilyRepo : IFamilyRepo,IPeopleRepo {
+    public class FamilyRepo : IFamilyRepo,IPeopleRepo, IChildRepo, IPetRepo {
         public IDAO Dao;
 
         public FamilyRepo() {
@@ -39,6 +39,56 @@ namespace FamilyManagerWebAPI.Repository {
 
         public async Task<Person> GetPersonAsync(int id, string firstName, string lastName) {
             return await Dao.GetPersonAsync(id, firstName, lastName);
+        }
+
+        // Children repo methods
+        public async Task<IList<Child>> GetChildrenAsync() {
+            return await Dao.GetChildrenAsync();
+        }
+
+        public async Task<IList<Child>> GetChildrenAsync(string streetName, int houseNumber) {
+            return await Dao.GetChildrenAsync(streetName, houseNumber);
+        }
+
+        public async Task<Child> GetChildAsync(int childId) {
+            return await Dao.GetChildAsync(childId);
+        }
+
+        public async Task<Child> AddChildAsync(string streetName, int houseNumber, Child child) {
+            return await Dao.AddChildAsync(streetName, houseNumber, child);
+        }
+
+        public async Task<Child> UpdateChildAsync(int childId, Child child) {
+            return await Dao.UpdateChildAsync(childId, child);
+        }
+
+        public async Task DeleteChildAsync(int childId) {
+            await Dao.DeleteChildAsync(childId);
+        }
+
+        // Pets repo methods
+        public async Task<IList<Pet>> GetPetsAsync(string street, int number) {
+            return await Dao.GetPetsAsync(street, number);
+        }
+
+        public async Task<Pet> GetPetAsync(int id) {
+            return await Dao.GetPetAsync(id);
+        }
+
+        public async Task<Pet> AddPetAsync(Pet pet, string street, int number) {
+            return await Dao.AddPetAsync(pet, street, number);
+        }
+
+        public async Task<Pet> AddPetAsync(Pet pet, string street, int number, int childId) {
+            return await Dao.AddPetAsync(pet, street, number, childId);
+        }
+
+        public async Task<Pet> UpdatePetAsync(int id, Pet pet) {
+            return await Dao.UpdatePetAsync(id, pet);
+        }
+
+        public async Task RemovePetAsync(int id) {
+            await Dao.RemovePetAsync(id);
         }
     }
 }
