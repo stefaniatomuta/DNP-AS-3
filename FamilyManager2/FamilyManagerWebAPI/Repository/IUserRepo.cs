@@ -3,7 +3,7 @@ using Models;
 
 namespace FamilyManagerWebAPI.Repository {
     public interface IUserRepo {
-        Task<User> get(string username, string password);
-        Task<User> add(User user);
+        Task<User> GetUserAsync(string username, string password);
+        Task<User> AddUserAsync(User user);
     }
 }
