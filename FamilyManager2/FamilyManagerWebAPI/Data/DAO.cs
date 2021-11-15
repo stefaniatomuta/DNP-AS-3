@@ -22,7 +22,7 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<IList<Family>> GetFamiliesAsync() {
             using FamilyContext familyContext = new FamilyContext();
-            return await familyContext.Families.Include(fam => fam.Adults).ThenInclude(a => a.JobTitle).
+            return await familyContext.Families.Include(fam => fam.Adults).ThenInclude(a => a.Job).
                 Include(fam =>fam.Children).ThenInclude(c => c.Interests ).Include(fam =>fam.Children).
                 ThenInclude(c => c.Pets ).Include(fam => fam.Pets).ToListAsync();
         }
@@ -119,7 +119,7 @@ namespace FamilyManagerWebAPI.Data {
             adult.FirstName = a.FirstName;
             adult.LastName = a.LastName;
             adult.HairColor = a.HairColor;
-            adult.JobTitle = a.JobTitle;
+            adult.Job = a.Job;
             adult.Age = a.Age;
             adult.Height = a.Height;
             adult.Weight = a.Weight;
@@ -132,7 +132,7 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<IList<Adult>> GetAdultsAsync() {
             using FamilyContext familyContext = new FamilyContext();
-            return await familyContext.Families.SelectMany(fam => fam.Adults).Include(adult => adult.JobTitle)
+            return await familyContext.Families.SelectMany(fam => fam.Adults).Include(adult => adult.Job)
                 .ToListAsync();
         }
 
