@@ -4,15 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FamilyManagerWebAPI.Persistance;
+using Microsoft.EntityFrameworkCore;
 using Models;
 
 namespace FamilyManagerWebAPI.Data {
     public class DAO : IDAO {
-        private FileContext file;
         
-        public DAO() {
-            file = new FileContext();
-        }
 
         public async Task<IList<string>> GetEyeColorsAsync() {
             return file.People.Select(p => p.EyeColor).Distinct().ToList();
@@ -23,8 +21,8 @@ namespace FamilyManagerWebAPI.Data {
         }
 
         public async Task<IList<Family>> GetFamiliesAsync() {
-            List<Family> families = new List<Family>(file.Families);
-            return families;
+            using FamilyContext familyContext = new FamilyContext();
+            return  await familyContext.Families.ToListAsync();
         }
 
         public async Task<Family> GetFamilyAsync(string streetName, int houseNumber) {
