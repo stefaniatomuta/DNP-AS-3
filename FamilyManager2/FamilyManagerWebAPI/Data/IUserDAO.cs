@@ -4,7 +4,7 @@ using Models;
 
 namespace FamilyManagerWebAPI.Data {
     public interface IUserDAO {
-        Task<User> AddUserAsync(User user);
-        Task<User> GetUserAsync(string username, string password);
+        Task<User> AddAsync(User user);
+        Task<User> ReadAsync(string username, string password);
     }
 }

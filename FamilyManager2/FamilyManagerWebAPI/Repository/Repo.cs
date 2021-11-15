@@ -4,10 +4,10 @@ using FamilyManagerWebAPI.Data;
 using Models;
 
 namespace FamilyManagerWebAPI.Repository {
-    public class FamilyRepo : IFamilyRepo,IPeopleRepo, IChildRepo, IPetRepo {
+    public class Repo : IFamilyRepo,IPeopleRepo,IAdultRepo, IStatisticRepo, IChildRepo, IPetRepo {
         public IDAO Dao;
 
-        public FamilyRepo() {
+        public Repo() {
             Dao = new DAO();
         }
 
@@ -39,6 +39,39 @@ namespace FamilyManagerWebAPI.Repository {
 
         public async Task<Person> GetPersonAsync(int id, string firstName, string lastName) {
             return await Dao.GetPersonAsync(id, firstName, lastName);
+        }
+        //Adult repo methods
+        public async Task<IList<Adult>> GetAdultsAsync() {
+            return await Dao.GetAdultsAsync();
+        }
+
+        public async Task<Adult> GetAdultAsync(int id) {
+            return await Dao.GetAdultAsync(id);
+        }
+
+        public async Task<IList<Adult>> GetAdultsByFamilyAsync(string streetName, int houseNumber) {
+            return await Dao.GetAdultsByFamilyAsync(streetName, houseNumber);
+        }
+
+        public async Task<Adult> AddAdultAsync(string streetName, int houseNumber, Adult adult) {
+            return await Dao.AddAdultAsync(streetName, houseNumber, adult);
+        }
+
+        public async Task<Adult> UpdateAdultAsync(int id, Adult adult) {
+            return await Dao.UpdateAdultAsync(id, adult);
+        }
+
+        public async Task DeleteAdultAsync(int id) {
+            await Dao.DeleteAdultAsync(id);
+        }
+
+        //Statistic repo
+        public async Task<IList<string>> GetEyeColorsAsync() {
+            return await Dao.GetEyeColorsAsync();
+        }
+
+        public async Task<IList<string>> GetHairColorsAsync() {
+            return await Dao.GetHairColorsAsync();
         }
 
         // Children repo methods

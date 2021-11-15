@@ -9,13 +9,15 @@ namespace FamilyManagerWebAPI.Repository {
         public UserRepo() {
             userDao = new UserDAO();
         }
-        
-        public async Task<User> get(string username, string password) {
-            throw new System.NotImplementedException();
-        }
 
-        public async Task<User> add(User user) {
-            throw new System.NotImplementedException();
+        public async Task<User> AddUserAsync(User user) {
+            User created = await userDao.AddAsync(user);
+            return created;
+        }
+        
+        public async Task<User> GetUserAsync(string username, string password) {
+            User user = await userDao.ReadAsync(username, password);
+            return user;
         }
     }
 }
