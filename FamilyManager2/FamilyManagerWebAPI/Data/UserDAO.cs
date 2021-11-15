@@ -10,7 +10,7 @@ namespace FamilyManagerWebAPI.Data {
             using UserContext context = new UserContext();
 
             User existing = await context.Users.FirstOrDefaultAsync(u =>
-                u.Username.Equals(user.Username, StringComparison.CurrentCultureIgnoreCase));
+                u.Username.Equals(user.Username));
             
             if (existing != null) throw new Exception("That username is already taken");
             

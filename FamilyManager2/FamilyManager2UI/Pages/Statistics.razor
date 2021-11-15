@@ -32,7 +32,7 @@
             <div class="col-xl-5 col-md-12">
                 <p>Total number of families with single parents: <strong>@families.Count(f => f.Adults.Count() == 1)</strong></p>
                 <p>Total number of people with the last name 'Mcclure': <strong>@people.Count(p => p.LastName.Equals("Mcclure"))</strong></p>
-                <p>Total number of teachers: <strong>@people.Count(p => p is Adult adult && adult.JobTitle.JobTitle.Equals("Teacher"))</strong></p>
+                <p>Total number of teachers: <strong>@people.Count(p => p is Adult adult && adult.Job.JobTitle.Equals("Teacher"))</strong></p>
                 <p>Total number of children with an interest in drawing: <strong>@people.Count(p => p is Child child && child.Interests.Any(i => i.Type.Equals("Drawing")))</strong></p>
             </div>
         </div>
