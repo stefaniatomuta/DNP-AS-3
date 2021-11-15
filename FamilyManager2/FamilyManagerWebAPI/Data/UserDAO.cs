@@ -1,32 +1,33 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using FamilyManagerWebAPI.Persistance;
+using Microsoft.EntityFrameworkCore;
 using Models;
 
 namespace FamilyManagerWebAPI.Data {
     public class UserDAO : IUserDAO {
-        private UserFileContext fileContext;
+        public async Task<User> AddAsync(User user) {
+            using UserContext context = new UserContext();
 
-        public UserDAO() {
-            fileContext = new UserFileContext();
-        }
-
-        public async Task<User> GetUserAsync(string username, string password) {
-            User user = fileContext.Users.FirstOrDefault(
-                u => u.Username.Equals(username) && u.Password.Equals(password));
-            if (user == null)
-                throw new NullReferenceException("No user found");
+            User existing = await context.Users.FirstOrDefaultAsync(u =>
+                u.Username.Equals(user.Username, StringComparison.CurrentCultureIgnoreCase));
+            
+            if (existing != null) throw new Exception("That username is already taken");
+            
+            await context.Users.AddAsync(user);
+            await context.SaveChangesAsync();
             return user;
         }
 
-        public async Task<User> AddUserAsync(User user) {
-            User first = fileContext.Users.FirstOrDefault(u => u.Username.Equals(user.Username, StringComparison.CurrentCultureIgnoreCase));
-            if (first!=null && first.Equals(user))
-                throw new Exception("User already exists");
-            fileContext.Users.Add(user);
-            fileContext.WriteUsersToFile();
-            return first;
+        public async Task<User> ReadAsync(string username, string password) {
+            using UserContext context = new UserContext();
+
+            User user = await context.Users.FirstOrDefaultAsync(u =>
+                u.Username.Equals(username) && u.Password.Equals(password));
+            
+            if (user == null) throw new NullReferenceException("No such user found");
+            
+            return user;
         }
     }
 }
