@@ -1,10 +1,16 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Models {
 public class Family {
+    [Required, MaxLength(256)]
     public string StreetName { get; set; }
+    
+    [Required, MaxLength(32)]
     public int HouseNumber{ get; set; }
+    
     public List<Adult> Adults { get; set; }
     public List<Child> Children{ get; set; }
     public List<Pet> Pets{ get; set; }
