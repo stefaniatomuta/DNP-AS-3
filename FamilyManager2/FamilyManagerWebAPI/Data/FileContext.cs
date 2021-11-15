@@ -44,7 +44,7 @@ namespace FamilyManagerWebAPI.Data {
                             HairColor = "red",
                             Height = 175,
                             Id = 1,
-                            JobTitle = new Job() {
+                            Job = new Job() {
                                 JobTitle = "Bartender",
                                 Salary = 12000
                             },
