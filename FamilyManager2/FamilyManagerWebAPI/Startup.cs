@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FamilyManagerWebAPI.Data;
+using FamilyManagerWebAPI.Persistance;
+using FamilyManagerWebAPI.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +30,9 @@ namespace FamilyManagerWebAPI {
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "FamilyManagerWebAPI", Version = "v1"});
             });
+            services.AddDbContext<FamilyContext>();
+            services.AddDbContext<UserContext>();
+            services.AddSingleton<IDAO, DAO>();
             services.AddSingleton<IUserRepo, UserRepo>();
         }
 
