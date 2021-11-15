@@ -4,11 +4,11 @@ using Models;
 
 namespace FamilyManagerWebAPI.Persistance {
     
-    public class UserContext : DbContext{
-        public DbSet<Family> Families { get; set; }
+    public class UserContext : DbContext {
+        public DbSet<User> Users { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseSqlite("Data Source = Families.db");
+            optionsBuilder.UseSqlite("Data Source = Users.db");
         }
     }
 }
