@@ -58,6 +58,17 @@
                             }
                         </div>
                     }
+                    <div class="px-2 rounded mt-3">
+                        Interests:
+                        @foreach (var interest in child.Interests) {
+                            <div class="px-2 rounded mt-3">
+                                <span>@interest.Type</span>
+                            </div>
+                            <div class="px-2 rounded mt-3">
+                                <span>@interest.Description</span>
+                            </div>
+                        }
+                    </div>
                 }
             </div>
         </div>
