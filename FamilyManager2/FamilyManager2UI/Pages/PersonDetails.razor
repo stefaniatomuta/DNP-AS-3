@@ -43,13 +43,13 @@
                     <span class="join">Hair Color: @person.HairColor</span>
                 </div>
                 @if (person is Adult) {
-                    Adult adult = (Adult) person;
+                    Adult adult = (Adult)person;
                     <div class="px-2 rounded mt-3">
                         <span>Job title: @adult.Job.JobTitle</span>
                     </div>
                 }
                 @if (person is Child) {
-                    Child child = (Child) person;
+                    Child child = (Child)person;
                     @if (child.Pets.Count != 0) {
                         <div class="px-2 rounded mt-3">
                             Pets:
@@ -65,13 +65,16 @@
 }
 
 @code {
+
     [Parameter]
     public int Id { set; get; }
+
     [Parameter]
     public string Firstname { set; get; }
+
     [Parameter]
     public string Lastname { set; get; }
-    
+
     public string FirstLastName { get; set; }
 
     private Person person;
@@ -80,5 +83,5 @@
         person = await restClient.GetPerson(Id, Firstname, Lastname);
         FirstLastName = $"{Firstname} {Lastname}";
     }
-    
+
 }

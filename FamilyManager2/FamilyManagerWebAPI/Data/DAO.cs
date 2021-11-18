@@ -73,7 +73,8 @@ namespace FamilyManagerWebAPI.Data {
             fami.Children = family.Children;
             fami.Adults = family.Adults;
             using FamilyContext familyContext = new FamilyContext();
-            familyContext.Update(fami);
+            // familyContext.Update(fami);
+            familyContext.Entry(fami).State = EntityState.Modified;
             await familyContext.SaveChangesAsync();
             return fami;
         }
@@ -133,8 +134,12 @@ namespace FamilyManagerWebAPI.Data {
             adult.Height = a.Height;
             adult.Weight = a.Weight;
             adult.EyeColor = a.EyeColor;
+            adult.Job.JobTitle = a.Job.JobTitle;
+            adult.Job.Salary = a.Job.Salary;
             using FamilyContext familyContext = new FamilyContext();
-            familyContext.Update(adult);
+            // familyContext.Families.Update(adult);
+            // familyContext.Entry(adult.Job).State = EntityState.Added;
+            familyContext.Entry(adult).State = EntityState.Modified;
             await familyContext.SaveChangesAsync();
             return adult;
         }
@@ -213,6 +218,13 @@ namespace FamilyManagerWebAPI.Data {
             updated.LastName = child.LastName;
             updated.Interests = child.Interests;
             updated.Pets = child.Pets;
+            familyContext.Entry(updated).State = EntityState.Modified;
+            // foreach (var interest in updated.Interests) {
+            //     familyContext.Entry(interest).State = EntityState.Added;
+            // }
+            foreach (var pet in updated.Pets) {
+                familyContext.Entry(pet).State = EntityState.Modified;
+            }
             await familyContext.SaveChangesAsync();
             return updated;
         }
@@ -258,6 +270,7 @@ namespace FamilyManagerWebAPI.Data {
             p.Age = pet.Age;
             p.Name = pet.Name;
             p.Species = pet.Species;
+            familyContext.Entry(pet).State = EntityState.Modified;
             await familyContext.SaveChangesAsync();
             return p;
         }
