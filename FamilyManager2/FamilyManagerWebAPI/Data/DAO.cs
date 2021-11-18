@@ -174,8 +174,8 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<IList<Child>> GetChildrenAsync() {
             await using FamilyContext familyContext = new FamilyContext();
-            IList<Child> children = familyContext.Families.SelectMany(f => f.Children).ToList();
-            return children;
+            return await familyContext.Families.SelectMany(f => f.Children).Include(child => child.Interests)
+                .Include(child => child.Pets).ToListAsync();
         }
 
         public async Task<IList<Child>> GetChildrenAsync(string streetName, int houseNumber) {
@@ -188,8 +188,8 @@ namespace FamilyManagerWebAPI.Data {
         }
 
         public async Task<Child> GetChildAsync(int childId) {
-            await using FamilyContext familyContext = new FamilyContext();
-            Child child = familyContext.Families.SelectMany(f => f.Children).FirstOrDefault(c => c.Id == childId);
+            IList<Child> children = await GetChildrenAsync();
+            Child child = children.FirstOrDefault(child => child.Id == childId);
             if (child == null) throw new NullReferenceException("No such child found");
             return child;
         }
