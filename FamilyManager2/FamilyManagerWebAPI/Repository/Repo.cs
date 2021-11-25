@@ -5,7 +5,7 @@ using Models;
 
 namespace FamilyManagerWebAPI.Repository {
     public class Repo : IFamilyRepo,IPeopleRepo,IAdultRepo, IStatisticRepo, IChildRepo, IPetRepo {
-        public IDAO Dao;
+        private IDAO Dao;
 
         public Repo() {
             Dao = new DAO();

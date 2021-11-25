@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FamilyManagerWebAPI.Persistance;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Models;
 
 namespace FamilyManagerWebAPI.Data {
@@ -40,16 +41,15 @@ namespace FamilyManagerWebAPI.Data {
         }
 
         public async Task<Family> AddFamilyAsync(Family family) {
-            using FamilyContext familyContext = new FamilyContext();
-            Family fam = familyContext.Families.FirstOrDefault(f =>
-                f.StreetName.Equals(family.StreetName) && f.HouseNumber == family.HouseNumber);
+            Family fam = await GetFamilyAsync(family.StreetName, family.HouseNumber);
             if (fam != null) {
                 throw new InvalidDataException("This family already exists");
             }
 
-            await familyContext.Families.AddAsync(family);
+            using FamilyContext familyContext = new FamilyContext();
+            EntityEntry<Family> created = await familyContext.Families.AddAsync(family);
             await familyContext.SaveChangesAsync();
-            return family;
+            return created.Entity;
         }
 
         public async Task<Family> RemoveFamilyAsync(string streetName, int houseNumber) {
@@ -61,43 +61,48 @@ namespace FamilyManagerWebAPI.Data {
         }
 
         public async Task<Family> UpdateFamilyAsync(string streetName, int houseNumber, Family family) {
-            Family fam = await GetFamilyAsync(streetName, houseNumber);
-            Family fami = await GetFamilyAsync(family.StreetName, family.HouseNumber);
-            if (fam != null) {
+            Family existing = await GetFamilyAsync(streetName, houseNumber);
+            Family toUpdate = await GetFamilyAsync(family.StreetName, family.HouseNumber);
+            if (existing != null) {
                 throw new InvalidDataException("The place is already taken by another family");
             }
 
-            fami.StreetName = family.StreetName;
-            fami.HouseNumber = family.HouseNumber;
-            fami.Pets = family.Pets;
-            fami.Children = family.Children;
-            fami.Adults = family.Adults;
+            toUpdate.StreetName = family.StreetName;
+            toUpdate.HouseNumber = family.HouseNumber;
+            toUpdate.Pets = family.Pets;
+            toUpdate.Children = family.Children;
+            toUpdate.Adults = family.Adults;
             using FamilyContext familyContext = new FamilyContext();
-            familyContext.Update(fami);
+            familyContext.Update(toUpdate);
             await familyContext.SaveChangesAsync();
-            return fami;
+            return toUpdate;
         }
 
         public async Task<Adult> AddAdultAsync(string streetName, int houseNumber, Adult adult) {
-            try {
-                Family fam = await GetFamilyAsync(streetName, houseNumber);
-                using FamilyContext familyContext = new FamilyContext();
-                if (fam.Adults.Count < 2) {
-                    adult.Id = 0;
-                    fam.Adults.Add(adult);
-                    await familyContext.AddAsync(adult);
-                    familyContext.Update(fam);
-                    await familyContext.SaveChangesAsync();
-                    return adult;
+            Family fam = await GetFamilyAsync(streetName, houseNumber);
+            using FamilyContext familyContext = new FamilyContext();
+            if (fam.Adults.Count < 2) {
+                adult.Id = 0;
+                Job job = familyContext.Families
+                    .SelectMany(f => f.Adults)
+                    .Select(a => a.Job)
+                    .Where(j => j.JobTitle.Equals(adult.Job.JobTitle) && j.Salary == adult.Job.Salary)
+                    .ToList()
+                    .FirstOrDefault();
+                
+                if (job != null) {
+                    adult.Job = job;
+                    Console.WriteLine(job.JobTitle + " - " + job.Salary);
                 }
-
-                throw new Exception("Max 2 adults per family");
+                
+                fam.Adults.Add(adult);
+                await familyContext.AddAsync(adult);
+                familyContext.Update(fam);
+                await familyContext.SaveChangesAsync();
+                return adult;
             }
-            catch (Exception e) {
-                Console.WriteLine(e.Message);
-            }
-
-            return null;
+            
+            throw new Exception("Max 2 adults per family");
         }
 
         public async Task<IList<Adult>> GetAdultsByFamilyAsync(string streetName, int houseNumber) {
@@ -107,9 +112,10 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<Adult> GetAdultAsync(int id) {
             IList<Adult> adults = await GetAdultsAsync();
+            Console.WriteLine(">>> " + adults.Count);
             Adult adult = adults.FirstOrDefault(adult => adult.Id == id);
             if (adult == null) {
-                throw new NullReferenceException("There is no adult with such id");
+                throw new NullReferenceException("There is no adult with id: " + id);
             }
 
             return adult;
@@ -120,11 +126,14 @@ namespace FamilyManagerWebAPI.Data {
             using FamilyContext familyContext = new FamilyContext();
             familyContext.Remove(adult);
             await familyContext.SaveChangesAsync();
-           
         }
 
         public async Task<Adult> UpdateAdultAsync(int id, Adult a) {
-            Adult adult = await GetAdultAsync(id);
+            using FamilyContext familyContext = new FamilyContext();
+            Adult adult = await familyContext.Set<Adult>()
+                .Where(a => a.Id == id)
+                .Include(a => a.Job)
+                .FirstOrDefaultAsync();
             adult.FirstName = a.FirstName;
             adult.LastName = a.LastName;
             adult.HairColor = a.HairColor;
@@ -133,15 +142,16 @@ namespace FamilyManagerWebAPI.Data {
             adult.Height = a.Height;
             adult.Weight = a.Weight;
             adult.EyeColor = a.EyeColor;
-            using FamilyContext familyContext = new FamilyContext();
-            familyContext.Update(adult);
+            
+            familyContext.Set<Adult>().Update(adult);
             await familyContext.SaveChangesAsync();
             return adult;
         }
 
         public async Task<IList<Adult>> GetAdultsAsync() {
             using FamilyContext familyContext = new FamilyContext();
-            return await familyContext.Families.SelectMany(fam => fam.Adults).Include(adult => adult.Job)
+            return await familyContext.Families.SelectMany(fam => fam.Adults)
+                .Include(adult => adult.Job)
                 .ToListAsync();
         }
 
@@ -184,7 +194,10 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<Child> GetChildAsync(int childId) {
             await using FamilyContext familyContext = new FamilyContext();
-            Child child = familyContext.Families.SelectMany(f => f.Children).FirstOrDefault(c => c.Id == childId);
+            Child child = familyContext.Families.SelectMany(f => f.Children)
+                .Include(c => c.Interests)
+                .Include(c => c.Pets)
+                .FirstOrDefault(c => c.Id == childId);
             if (child == null) throw new NullReferenceException("No such child found");
             return child;
         }
@@ -194,7 +207,6 @@ namespace FamilyManagerWebAPI.Data {
             Family family = await GetFamilyAsync(streetName, houseNumber);
             child.Id = 0;
             family.Children.Add(child);
-            familyContext.Add(child);
             familyContext.Update(family);
             await familyContext.SaveChangesAsync();
             return child;
@@ -202,7 +214,11 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<Child> UpdateChildAsync(int childId, Child child) {
             await using FamilyContext familyContext = new FamilyContext();
-            Child updated = await GetChildAsync(childId);
+            Child updated = await familyContext.Set<Child>()
+                .Where(c => c.Id == childId)
+                .Include(c => c.Interests)
+                .Include(c => c.Pets)
+                .FirstOrDefaultAsync();
             updated.Age = child.Age;
             updated.Height = child.Height;
             updated.Sex = child.Sex;
@@ -213,6 +229,7 @@ namespace FamilyManagerWebAPI.Data {
             updated.LastName = child.LastName;
             updated.Interests = child.Interests;
             updated.Pets = child.Pets;
+            familyContext.Set<Child>().Update(updated);
             await familyContext.SaveChangesAsync();
             return updated;
         }
@@ -237,27 +254,33 @@ namespace FamilyManagerWebAPI.Data {
         public async Task<Pet> AddPetAsync(Pet pet, string street, int number) {
             await using FamilyContext familyContext = new FamilyContext();
             pet.Id = 0;
-            (await GetFamilyAsync(street, number)).Pets.Add(pet);
-            familyContext.Update(await GetFamilyAsync(street, number));
+            Family fam = await GetFamilyAsync(street, number);
+            fam.Pets.Add(pet);
+            familyContext.Update(fam);
             await familyContext.SaveChangesAsync();
             return pet;
         }
 
         public async Task<Pet> AddPetAsync(Pet pet, string street, int number, int childId) {
+            Family family = await GetFamilyAsync(street, number);
+            Child child = family.Children.FirstOrDefault(c => c.Id == childId);
             await using FamilyContext familyContext = new FamilyContext();
             pet.Id = 0;
-            (await GetFamilyAsync(street, number)).Children.FirstOrDefault(c => c.Id == childId)?.Pets.Add(pet);
-            familyContext.Update(await GetFamilyAsync(street, number));
+            child.Pets.Add(pet);
+            familyContext.Update(family);
             await familyContext.SaveChangesAsync();
             return pet;
         }
 
         public async Task<Pet> UpdatePetAsync(int id, Pet pet) {
             await using FamilyContext familyContext = new FamilyContext();
-            Pet p = await GetPetAsync(id);
+            Pet p = await familyContext.Set<Pet>()
+                .Where(p => p.Id == id)
+                .FirstOrDefaultAsync();
             p.Age = pet.Age;
             p.Name = pet.Name;
             p.Species = pet.Species;
+            familyContext.Set<Pet>().Update(p);
             await familyContext.SaveChangesAsync();
             return p;
         }

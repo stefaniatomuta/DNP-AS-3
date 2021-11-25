@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="Users" uuid="b2d21597-dbdd-4786-908e-66a70beb15ac">
+    <data-source source="LOCAL" name="Users" uuid="52ce699b-ec2f-4cc8-9ab8-3352c0cc959e">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\tomut\Desktop\DNP-AS-3\FamilyManager2\FamilyManagerWebAPI\Users.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:D:\3. SEMESTER\DNP\DNP-AS-3\FamilyManager2\FamilyManagerWebAPI\Users.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>
@@ -13,11 +13,11 @@
         </library>
       </libraries>
     </data-source>
-    <data-source source="LOCAL" name="Families" uuid="7b2094e4-e2ac-4b45-928a-c02d236ee244">
+    <data-source source="LOCAL" name="Families" uuid="e6568999-3489-4025-a900-32a71a9b39df">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\tomut\Desktop\DNP-AS-3\FamilyManager2\FamilyManagerWebAPI\Families.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:D:\3. SEMESTER\DNP\DNP-AS-3\FamilyManager2\FamilyManagerWebAPI\Families.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>
