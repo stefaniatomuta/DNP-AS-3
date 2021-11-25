@@ -112,10 +112,9 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<Adult> GetAdultAsync(int id) {
             IList<Adult> adults = await GetAdultsAsync();
-            Console.WriteLine(">>> " + adults.Count);
             Adult adult = adults.FirstOrDefault(adult => adult.Id == id);
             if (adult == null) {
-                throw new NullReferenceException("There is no adult with id: " + id);
+                throw new NullReferenceException("There is no adult with such id");
             }
 
             return adult;
@@ -179,8 +178,8 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<IList<Child>> GetChildrenAsync() {
             await using FamilyContext familyContext = new FamilyContext();
-            IList<Child> children = familyContext.Families.SelectMany(f => f.Children).ToList();
-            return children;
+            return await familyContext.Families.SelectMany(f => f.Children).Include(child => child.Interests)
+                .Include(child => child.Pets).ToListAsync();
         }
 
         public async Task<IList<Child>> GetChildrenAsync(string streetName, int houseNumber) {
