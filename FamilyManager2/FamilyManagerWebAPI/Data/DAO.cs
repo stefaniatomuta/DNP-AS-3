@@ -33,10 +33,6 @@ namespace FamilyManagerWebAPI.Data {
             IList<Family> families = await GetFamiliesAsync();
             Family fam = families.FirstOrDefault(f =>
                     f.StreetName.Equals(streetName) && f.HouseNumber == houseNumber);
-            if (fam == null) {
-                throw new NullReferenceException("No family was found with these street name and house number");
-            }
-
             return fam;
         }
 
@@ -45,7 +41,6 @@ namespace FamilyManagerWebAPI.Data {
             if (fam != null) {
                 throw new InvalidDataException("This family already exists");
             }
-
             using FamilyContext familyContext = new FamilyContext();
             EntityEntry<Family> created = await familyContext.Families.AddAsync(family);
             await familyContext.SaveChangesAsync();
@@ -54,6 +49,9 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<Family> RemoveFamilyAsync(string streetName, int houseNumber) {
             Family fam = await GetFamilyAsync(streetName, houseNumber);
+            if (fam == null) {
+                throw new NullReferenceException("No family was found with these street name and house number");
+            }
             using FamilyContext familyContext = new FamilyContext();
             familyContext.Families.Remove(fam);
             await familyContext.SaveChangesAsync();
@@ -62,11 +60,13 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<Family> UpdateFamilyAsync(string streetName, int houseNumber, Family family) {
             Family existing = await GetFamilyAsync(streetName, houseNumber);
+            if (family == null) {
+                throw new NullReferenceException("No family was found with these street name and house number");
+            }
             Family toUpdate = await GetFamilyAsync(family.StreetName, family.HouseNumber);
             if (existing != null) {
                 throw new InvalidDataException("The place is already taken by another family");
             }
-
             toUpdate.StreetName = family.StreetName;
             toUpdate.HouseNumber = family.HouseNumber;
             toUpdate.Pets = family.Pets;
@@ -80,6 +80,9 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<Adult> AddAdultAsync(string streetName, int houseNumber, Adult adult) {
             Family fam = await GetFamilyAsync(streetName, houseNumber);
+            if (fam == null) {
+                throw new NullReferenceException("No family was found with these street name and house number");
+            }
             using FamilyContext familyContext = new FamilyContext();
             if (fam.Adults.Count < 2) {
                 adult.Id = 0;
@@ -204,7 +207,12 @@ namespace FamilyManagerWebAPI.Data {
         public async Task<Child> AddChildAsync(string streetName, int houseNumber, Child child) {
             await using FamilyContext familyContext = new FamilyContext();
             Family family = await GetFamilyAsync(streetName, houseNumber);
+            if (family == null) {
+                throw new NullReferenceException("No family was found with these street name and house number");
+            }
             child.Id = 0;
+            // Interest interest = familyContext.Families.SelectMany(f => f.Children).SelectMany(a => a.Interests)
+            //     .Select(i => i.Description.Equals(child.Interests.Where(c => c.Description)));
             family.Children.Add(child);
             familyContext.Update(family);
             await familyContext.SaveChangesAsync();
@@ -262,6 +270,9 @@ namespace FamilyManagerWebAPI.Data {
 
         public async Task<Pet> AddPetAsync(Pet pet, string street, int number, int childId) {
             Family family = await GetFamilyAsync(street, number);
+            if (family == null) {
+                throw new NullReferenceException("No family was found with these street name and house number");
+            }
             Child child = family.Children.FirstOrDefault(c => c.Id == childId);
             await using FamilyContext familyContext = new FamilyContext();
             pet.Id = 0;
