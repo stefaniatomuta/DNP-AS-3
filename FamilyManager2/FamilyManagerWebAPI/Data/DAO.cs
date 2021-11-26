@@ -222,7 +222,7 @@ namespace FamilyManagerWebAPI.Data {
                 if (ci != null) child.Interests[x] = ci;
             }
             
-            // Loop through interests, if any are already in the database, update the reference in the Child.Pets
+            // Loop through pets, if any are already in the database, update the reference in the Child.Pets
             var pets = familyContext.Set<Pet>();
             for (int x = 0; x < child.Pets.Count; x++) {
                 var cp = await pets.FirstOrDefaultAsync(p => p.Id == child.Pets[x].Id);

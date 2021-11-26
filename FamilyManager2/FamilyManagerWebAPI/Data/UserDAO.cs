@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FamilyManagerWebAPI.Persistance;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,18 @@ namespace FamilyManagerWebAPI.Data {
             if (user == null) throw new NullReferenceException("No such user found");
             
             return user;
+        }
+
+        public async Task<User> UpdateUserAsync(string username, User user) {
+            using UserContext context = new UserContext();
+            User u = await context.Set<User>().FirstOrDefaultAsync(u => u.Username.Equals(username));
+            if (u == null) throw new NullReferenceException("No such user found");
+            u.Role = user.Role;
+            u.Password = user.Password;
+            u.Username = user.Username;
+            context.Set<User>().Update(u);
+            await context.SaveChangesAsync();
+            return u;
         }
     }
 }

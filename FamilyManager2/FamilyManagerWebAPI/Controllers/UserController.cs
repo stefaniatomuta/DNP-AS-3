@@ -42,5 +42,20 @@ namespace FamilyManagerWebAPI.Controllers {
                 return StatusCode(500, e.Message);
             }
         }
+
+        [HttpPut]
+        [Route("{username}")]
+        public async Task<ActionResult<User>> UpdateUserAsync([FromRoute] string username, [FromBody] User user) {
+            try {
+                User u = await userDao.UpdateUserAsync(username, user);
+                return Ok(u);
+            }
+            catch (NullReferenceException e) {
+                return NotFound(e.Message);
+            }
+            catch (Exception e) {
+                return StatusCode(500, e.Message);
+            }
+        }
     }
 }
