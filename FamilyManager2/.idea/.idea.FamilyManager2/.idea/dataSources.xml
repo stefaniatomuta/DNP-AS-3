@@ -5,7 +5,7 @@
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:D:\3. SEMESTER\DNP\DNP-AS-3\FamilyManager2\FamilyManagerWebAPI\Users.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:F:\3. SEMESTER\DNP\DNP-AS-3\FamilyManager2\FamilyManagerWebAPI\Users.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>
@@ -17,7 +17,7 @@
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:D:\3. SEMESTER\DNP\DNP-AS-3\FamilyManager2\FamilyManagerWebAPI\Families.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:F:\3. SEMESTER\DNP\DNP-AS-3\FamilyManager2\FamilyManagerWebAPI\Families.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using FamilyManagerWebAPI.Data;
 using FamilyManagerWebAPI.Persistance;
-using FamilyManagerWebAPI.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,7 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using FamilyManagerWebAPI.Repository;
 
 namespace FamilyManagerWebAPI {
     public class Startup {
@@ -32,8 +30,8 @@ namespace FamilyManagerWebAPI {
             });
             services.AddDbContext<FamilyContext>();
             services.AddDbContext<UserContext>();
-            services.AddSingleton<IDAO, DAO>();
-            services.AddSingleton<IUserRepo, UserRepo>();
+            services.AddScoped<IDAO, DAO>();
+            services.AddScoped<IUserDAO, UserDAO>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

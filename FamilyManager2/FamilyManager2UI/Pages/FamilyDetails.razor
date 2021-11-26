@@ -173,7 +173,7 @@
         family = await restClient.GetAsync<Family>(Address,Number);
         familyMembers = family.GetAllMembers();
         filteredFamilyMembers = familyMembers;
-        pets = family.Pets;
+        pets = family.Pets.Concat(family.Children.SelectMany(c => c.Pets)).ToList();
         filteredPets = pets;
     }
 

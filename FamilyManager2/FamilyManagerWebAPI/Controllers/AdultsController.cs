@@ -6,14 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 using Models;
 
 namespace FamilyManagerWebAPI.Controllers {
-    
     [ApiController]
     [Route("[controller]")]
     public class AdultsController : ControllerBase {
         private IDAO service;
+        
         public AdultsController(IDAO familyData) {
            service = familyData;
         }
+        
         [HttpGet]
         public async Task<ActionResult<IList<Adult>>> GetAdultsAsync() {
             try {
@@ -64,6 +65,7 @@ namespace FamilyManagerWebAPI.Controllers {
                 return Created($"/{adult.Id}", adult1);
             }
             catch (Exception e) {
+                Console.WriteLine(e.StackTrace);
                 return StatusCode(500, e.Message);
             }
         }
@@ -74,8 +76,9 @@ namespace FamilyManagerWebAPI.Controllers {
             try {
                 await service.DeleteAdultAsync(id);
                 return Ok();
-            }
-            catch (Exception e) {
+            } catch (NullReferenceException e) {
+                return NotFound(e.Message);
+            } catch (Exception e) {
                 return StatusCode(500, e.Message);
             }
         }
@@ -86,12 +89,11 @@ namespace FamilyManagerWebAPI.Controllers {
             try {
                 Adult updated = await service.UpdateAdultAsync(id, adult);
                 return Ok(updated);
-            }
-            catch (Exception e) {
-                Console.WriteLine(e.StackTrace);
+            } catch (NullReferenceException e) {
+                return NotFound(e.Message);
+            } catch (Exception e) {
                 return StatusCode(500, e.Message);
             }
         }
-
     }
 }

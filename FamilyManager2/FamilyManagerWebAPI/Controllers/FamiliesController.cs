@@ -17,7 +17,6 @@ namespace FamilyManagerWebAPI.Controllers {
             FamilyData = familyData;
         }
 
-        //methods
         [HttpGet]
         public async Task<ActionResult<IList<Family>>> GetFamiliesAsync() {
             try {
@@ -37,7 +36,7 @@ namespace FamilyManagerWebAPI.Controllers {
                 return Ok(family);
             }
             catch (NullReferenceException e) {
-                return NotFound();
+                return NotFound(e.Message);
             }
             catch (Exception e) {
                 return StatusCode(500, e.Message);
@@ -62,6 +61,9 @@ namespace FamilyManagerWebAPI.Controllers {
                 Family editedFamily = await FamilyData.UpdateFamilyAsync(streetName, houseNumber,family);
                 return Ok(editedFamily);
             }
+            catch (NullReferenceException e) {
+                return NotFound(e.Message);
+            }
             catch (Exception e) {
                 return StatusCode(500, e.Message);
             }
@@ -73,6 +75,9 @@ namespace FamilyManagerWebAPI.Controllers {
             try {
                 Family removedFamily = await FamilyData.RemoveFamilyAsync(streetName, houseNumber);
                 return Ok(removedFamily);
+            }
+            catch (NullReferenceException e) {
+                return NotFound(e.Message);
             }
             catch (Exception e) {
                 return StatusCode(500, e.Message);

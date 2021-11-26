@@ -65,8 +65,6 @@ namespace FamilyManagerWebAPI.Controllers {
                 return NotFound(e.Message);
             }
             catch (Exception e) {
-                Console.WriteLine(e.StackTrace);
-                Console.WriteLine(" ---- " + e.Message);
                 return StatusCode(500, e.Message);
             }
         }

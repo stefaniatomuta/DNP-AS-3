@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FamilyManagerWebAPI.Data;
-using FamilyManagerWebAPI.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
@@ -10,10 +9,10 @@ namespace FamilyManagerWebAPI.Controllers {
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase {
-        private IUserRepo userRepo;
+        private IUserDAO userDao;
 
-        public UserController(IUserRepo userRepo) {
-            this.userRepo = userRepo;
+        public UserController(IUserDAO userDao) {
+            this.userDao = userDao;
         }
 
         [HttpGet]
@@ -21,7 +20,7 @@ namespace FamilyManagerWebAPI.Controllers {
             try {
                 if (username == null || password == null) return BadRequest("Please enter username and password");
                 
-                User user = await userRepo.GetUserAsync(username, password);
+                User user = await userDao.GetUserAsync(username, password);
                 return Ok(user);
             }
             catch (NullReferenceException e) {
@@ -36,7 +35,7 @@ namespace FamilyManagerWebAPI.Controllers {
         [HttpPost]
         public async Task<ActionResult<User>> AddUserAsync([FromBody] User user) {
             try {
-                User newUser = await userRepo.AddUserAsync(user);
+                User newUser = await userDao.AddUserAsync(user);
                 return Created($"/{newUser.Username}", newUser);
             }
             catch (Exception e) {
